@@ -17,7 +17,6 @@ function chargerTeamSuccess(data, text, jqXHR) {
     var txt = '';
     
     $(data).find("equipe").each(function() {
-        alert($(this).find("nom").text());
         txt = "<tr><td>" + $(this).find("id").text() + "</td><td>" + $(this).find("nom").text() + "</td></tr>";
         $(txt).appendTo(tblContent);
     })
@@ -44,6 +43,7 @@ $(document).ready(function() {
     });
     butLoad.click(function(event) {
         chargerTeam(chargerTeamSuccess, chargerTeamError);
+    
     });
 });
 
