@@ -11,10 +11,17 @@
         <td>ID</td>
         <td>Club</td>
       </tr>
+      
       <?php
         require('ctrl.php');
-        // A compléter....
+        $index = 1;
+        $equipes = getEquipes();
+        foreach($equipes as $equipe){
+          echo('<tr><td>' . $index . '</td><td>' . $equipe . '</td></tr>');
+          $index++;
+        }
       ?>
+      
       </table>
     </div>
   </body>
