@@ -1,55 +1,34 @@
-# Exercice 6 - Introduction au PHP Object
+# Exercice 3 - Equipes
 
 ## Objectif
-La programmation objet (POO) avec PHP.
-Les apprentis prennent connaissance avec la syntaxe objet de PHP.
-
-## Ressources
-https://openclassrooms.com/fr/courses/1665806-programmez-en-oriente-objet-en-php
+Sujet	Application PHP sans architecture client / serveur
+Les apprentis complètent une application PHP qui génère du code HTML.
 
 ## Travail à réaliser
 
-1. Prenez connaissance au moins des chapitres suivants dans le tutoriel mentionné dans les ressources :
-	Initiez-vous à la programmation orientée objet : https://openclassrooms.com/fr/courses/1665806-programmez-en-oriente-objet-en-php/7307128-initiez-vous-a-la-programmation-orientee-objet-php
+Sur la base d'une application PHP conçue sur le modèle MVC2 (même si pour le moment, il ne s'agit pas encore de classes PHP), on vous demande de compléter le script qui joue le rôle de la vue (equipes.php) pour obtenir le résultat suivant :
 
-	Découvrez les objets et les classes : https://openclassrooms.com/fr/courses/1665806-programmez-en-oriente-objet-en-php/7306872-decouvrez-les-objets-et-les-classes
-
-	Créez vos propres classes : https://openclassrooms.com/fr/courses/1665806-programmez-en-oriente-objet-en-php/7306873-creez-vos-propres-classes
+![image](https://github.com/emf-info-151/module151/assets/48353440/7c988935-9b2b-46cb-a28f-a592b449428c)
 
 
-3. Voici une classe PHP (qui se trouve dans un fichier Membre.php) :
-```php	
-	<?php
-	class Membre
-	{
-	        private $nom;
-	        public $numero;
-	        public function construct($nom, $numero)
-	        {
-	                $this->nom = $nom;
-	                $this->numero = $numero;
-	        }
-	        public function getNom()
-	        {
-	                return $this->nom ;
-	        }
-	}
-	?>
-```
+Diagramme de classe : 
 
-Le code suivant utilise cette classe :
+![image](https://github.com/emf-info-151/module151/assets/48353440/a938a583-4a79-4ef2-a5a9-640af8b7dc06)
 
-```php
-	<?php
-	include_once('Membre')
-	
-	$membre = new Membre('paul');
-	$Nom = $membre.getNom();
-	$Numero = $membre.$numero;
-	
-	echo 'Un nouveau membre! Nom: ' $nom ', son âge: ' .$numero. '.';
-	?>
-```
-Il y a malheureusement des erreurs dans ces deux extraits de code. Corrigez Ces erreurs (mettez-les en rouge pour vous en souvenir).
- 
-3. Reprenez l'exercice "3. Une première application en PHP" et transformez les scripts faisant offices de Controller et de Worker en PHP objet.
+
+
+Diagramme de séquence : 
+
+![image](https://github.com/emf-info-151/module151/assets/48353440/95a0f1e5-70a0-4837-833d-6b648ee73f67)
+
+
+Astuce : 
+Créez un fichier "DockerFile" au même endroit que vos fichier PHP. C'est ce fichier qui va servir à créer le container. Dans notre cas, il y a plusieurs fichiers PHP, donc le DockerFile doit tous les copier (utiliser "." pour tout prendre dans le dossier courant). Le DockerFile ci-dessous fera l'affaire.
+  ```DockerFile
+# Utilisation de l'image PHP Apache
+FROM php:apache
+# Copier les fichiers de votre application dans le conteneur
+COPY . /var/www/html/
+# Exposer le port 80 du conteneur
+EXPOSE 80
+  ```
