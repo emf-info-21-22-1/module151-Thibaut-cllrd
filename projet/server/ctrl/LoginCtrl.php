@@ -25,39 +25,38 @@ class LoginCtrl
 
 
         } else {
-            echo 401;
+            echo 400;
         }
 
     }
     //Créer un nouveau profile
-    public function createProfile($mail, $name, $firstname, $password, $picture){
+    public function createProfile($mail, $name, $firstname, $password, $picture)
+    {
         if (!empty($mail) && !empty($name) && !empty($firstname) && !empty($password)) {
             $hashPassword = password_hash($password, PASSWORD_DEFAULT);
             $user = new User($mail, $hashPassword);
             $user->setName($name);
             $user->setFirstname($firstname);
-            if(!empty($picture)) {
+            
+            if (!empty($picture)) {
                 $user->setPicture($picture);
             }
 
-            if($loginService->createProfile($user)){
+            if ($this->loginService->createProfile($user)) {
                 echo 200;
-            }
-            else{
+            } else {
                 //Une erreur est survenue et le profil n'a pas été créé
                 echo 500;
             }
-            
 
-        }
-        else{
+
+        } else {
             //La requete est incomplète ou mal formulée
             echo 400;
         }
 
+    }
 }
 
 
 
-
-?>

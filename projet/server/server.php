@@ -25,9 +25,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
     $name = $_POST['name'];
     $firstname = $_POST['firstname'];
     $password = $_POST['password'];
-    $picture = $_POST['picture'];
 
-    $loginCtrl->createProfile($mail, $name, $firstname, $password, $picture);
+    if(isset($_POST['picture'])){
+      $loginCtrl->createProfile($mail, $name, $firstname, $password, $_POST['picture']);
+    }
+    else{
+      $loginCtrl->createProfile($mail, $name, $firstname, $password, null);
+    }
+    
   }
 		
 	}

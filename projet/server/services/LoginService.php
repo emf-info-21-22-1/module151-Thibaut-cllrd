@@ -1,40 +1,64 @@
 <?php
 require_once('ConnectionService.php');
 
-class LoginService{
-private $connexion;    
+class LoginService
+{
+    private $connexion;
 
-public function __construct(){
-    $this->connexion = ConnectionService::getInstance();
-}
+    public function __construct()
+    {
+        $this->connexion = ConnectionService::getInstance();
+    }
 
 
-//Check le login et retourne vrai si c'est ok
-public function checkLogin($user){
-    $return = false;
-    $user1 = $this ->connexion->selectSingleQuery('SELECT * FROM t_user WHERE mail= ?' , [$user->getMail()]);
-    
+    //Check le login et retourne vrai si c'est ok
+    public function checkLogin($user)
+    {
+        $return = false;
+        $user1 = $this->connexion->selectSingleQuery('SELECT * FROM t_user WHERE mail= ?', [$user->getMail()]);
+
         $mail = $user1['mail'];
         $password = $user1['password'];
-        if($user->getMail() == $mail){
-            if(password_verify($user->getPassword(), $password)){  
+        if ($user->getMail() == $mail) {
+            if (password_verify($user->getPassword(), $password)) {
                 $return = true;
-            }
-            else{
+            } else {
                 //Password incorrecte
                 $return = false;
             }
-        }
-        else{
+        } else {
             $return = false;
         }
-    
-    return $return;
-}
 
-public function createProfile(){}
+        return $return;
+    }
 
-public function disconnect(){}
+    public function createProfile($user)
+    {
+
+        $return = false;
+        $alreadyExist = $this->connexion->selectSingleQuery('SELECT * FROM t_user WHERE mail=?', [$user->getMail()]);
+        if ($alreadyExist == false) {
+            //Ce compte n'existe pas encore donc on peut le créer
+            $query = 'INSERT INTO t_user (mail,name,firstname,password,picture) VALUES (?,?,?,?,?)';
+            $params = [$user->getMail(), $user->getName(), $user->getFirstname(), $user->getPassword(), $user->getPicture()];
+
+            if ($this->connexion->executeQuery($query, $params)) {
+                $return = true;
+            } else {
+                $return = false;
+            }
+
+        } else {
+            $return = 'alreadyExist';
+        }
+
+        return $return;
+    }
+
+    public function disconnect()
+    {
+    }
 
 }
 

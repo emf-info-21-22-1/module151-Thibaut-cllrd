@@ -16,56 +16,74 @@ class User implements JsonSerializable
 
     $this->mail = $mail;
     $this->password = $password;
+    $this->picture = null;
 
-    
   }
 
- 
+
 
 
   //Getters
-  public function getName(){
+  public function getName()
+  {
     return $this->name;
   }
 
-  public function getMail(){
+  public function getFirstname()
+  {
+    return $this->firstname;
+  }
+
+  public function getMail()
+  {
     return $this->mail;
   }
 
-  public function getPk(){
+  public function getPk()
+  {
     return $this->pk;
   }
 
-  public function getPassword(){
+  public function getPassword()
+  {
     return $this->password;
   }
 
+  public function getPicture()
+  {
+    return $this->picture;
+  }
+
   //setters
-  public function setPk($pk){
+  public function setPk($pk)
+  {
     $this->pk = $pk;
   }
 
-  public function setName($name){
+  public function setName($name)
+  {
     $this->name = $name;
   }
-  public function setFirstname($firstname){
+  public function setFirstname($firstname)
+  {
     $this->firstname = $firstname;
   }
 
-  public function setPicture($picture){
+  public function setPicture($picture)
+  {
     $this->picture = $picture;
   }
 
 
   //Serialise la classe et retourne un Json
   public function jsonSerialize(): mixed
-    {
-        return [
-            #Par exemple :
-            #'pk' => $this->pk,
-            
-        ];
-    }
+  {
+    return [
+      #Par exemple :
+      #'pk' => $this->pk,
+
+    ];
+  }
 
 }
 
