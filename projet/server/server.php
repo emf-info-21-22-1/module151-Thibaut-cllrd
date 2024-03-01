@@ -1,4 +1,51 @@
 <?php
 
+header('Access-Control-Allow-Origin: http://localhost:8080');
+header('Access-Control-Allow-Credentials: true');
+
+require_once('ctrl/LoginCtrl.php');
+require_once('ctrl/PartyCtrl.php');
+require_once('ctrl/ProfileCtrl.php');
+require_once('ctrl/SessionCtrl.php');
+
+$loginCtrl  = new LoginCtrl();
+$partyCtrl = new PartyCtrl();
+$profileCtrl = new ProfileCtrl();
+$sessionCtrl = new SessionCtrl();
+
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST'){
+	
+	if($_POST['action'] == "checkLogin")
+    $loginCtrl->checkLogin($_POST['mail'], $_POST['password']);
+	{
+		
+  if($_POST['action'] == "createProfile"){
+    $mail = $_POST['mail'];
+    $name = $_POST['name'];
+    $firstname = $_POST['firstname'];
+    $password = $_POST['password'];
+    $picture = $_POST['picture'];
+
+    $loginCtrl->createProfile($mail, $name, $firstname, $password, $picture);
+  }
+		
+	}
+
+	if($_POST['action'] == "disconnect")
+	{
+		
+	}
+}
+
+
+
+if ($_SERVER['REQUEST_METHOD'] == 'GET'){
+	if($_GET['action'] == "getInfos")
+	{
+		
+		
+	}
+}
 
 ?>
