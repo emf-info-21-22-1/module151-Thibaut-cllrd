@@ -4,19 +4,18 @@
 class Participation implements JsonSerializable
 {
   private $pk;
-  private $isConducteur;
-  private $fk_voiture;
+  
+  private $fk_car;
   private $fk_user;
-  private $fk_fete;
+  private $fk_party;
 
   #Constructor
-  public function __construct($pk, $isConducteur, $fk_voiture, $fk_user, $fk_fete)
+  public function __construct($pk, $fk_car, $fk_user, $fk_party)
   {
     $this->pk = $pk;
-    $this->isConducteur = $isConducteur;
-    $this->fk_voiture = $fk_voiture;
+    $this->fk_car = $fk_car;
     $this->fk_user = $fk_user;
-    $this->fk_fete = $fk_fete;
+    $this->fk_party = $fk_party;
     
   }
 

@@ -1,41 +1,96 @@
 <?php
 
 
-class Voiture implements JsonSerializable
+class Car implements JsonSerializable
 {
   private $pk;
-  private $depart;
+  private $start;
   private $place;
   private $direction;
-  private $commentaire;
+  private $comment;
   private $fk_user;
 
   #Constructor
-  public function __construct($pk, $depart, $place, $direction, $commentaire, $fk_user)
+  public function __construct($fk_user)
   {
-    $this->pk = $pk;
-    $this->depart = $depart;
-    $this->place = $place;
-    $this->direction = $direction;
-    $this->commentaire = $commentaire;
     $this->fk_user = $fk_user;
-    
+
   }
 
-  // Getters
-  // public function getPk(){
-  //   return $this->pk;
-  // }
+  # Getters
+  public function getPk()
+  {
+    return $this->pk;
+  }
+
+  public function getStart()
+  {
+    return $this->start;
+  }
+
+  public function getPlace()
+  {
+    return $this->place;
+  }
+
+  public function getDirection()
+  {
+    return $this->direction;
+  }
+
+  public function getComment()
+  {
+    return $this->comment;
+  }
+
+  public function getFkUser()
+  {
+    return $this->fk_user;
+  }
+
+  # Setters
+  public function setPk($pk)
+  {
+    $this->pk = $pk;
+  }
+
+  public function setStart($start)
+  {
+    $this->start = $start;
+  }
+
+  public function setPlace($place)
+  {
+    $this->place = $place;
+  }
+
+  public function setDirection($direction)
+  {
+    $this->direction = $direction;
+  }
+
+  public function setComment($comment)
+  {
+    $this->comment = $comment;
+  }
+
+  public function setFkUser($fk_user)
+  {
+    $this->fk_user = $fk_user;
+  }
 
   #Serialise la classe et retourne un Json
   public function jsonSerialize(): mixed
-    {
-        return [
-            #Par exemple :
-            #'pk' => $this->pk,
-            
-        ];
-    }
+  {
+    return [
+      
+      'start' => $this->start,
+      'place' => $this->place,
+      'direction' => $this->direction,
+      'comment' => $this->comment
+
+    ];
+  }
 
 }
 

@@ -3,11 +3,11 @@ require_once('ConnectionService.php');
 
 class LoginService
 {
-    private $connexion;
+    private $connection;
 
     public function __construct()
     {
-        $this->connexion = ConnectionService::getInstance();
+        $this->connection = ConnectionService::getInstance();
     }
 
 
@@ -15,7 +15,7 @@ class LoginService
     public function checkLogin($user)
     {
         $return = false;
-        $user1 = $this->connexion->selectSingleQuery('SELECT * FROM t_user WHERE mail= ?', [$user->getMail()]);
+        $user1 = $this->connection->selectSingleQuery('SELECT * FROM t_user WHERE mail= ?', [$user->getMail()]);
 
         $mail = $user1['mail'];
         $password = $user1['password'];
@@ -37,13 +37,13 @@ class LoginService
     {
 
         $return = false;
-        $alreadyExist = $this->connexion->selectSingleQuery('SELECT * FROM t_user WHERE mail=?', [$user->getMail()]);
+        $alreadyExist = $this->connection->selectSingleQuery('SELECT * FROM t_user WHERE mail=?', [$user->getMail()]);
         if ($alreadyExist == false) {
             //Ce compte n'existe pas encore donc on peut le créer
             $query = 'INSERT INTO t_user (mail,name,firstname,password,picture) VALUES (?,?,?,?,?)';
             $params = [$user->getMail(), $user->getName(), $user->getFirstname(), $user->getPassword(), $user->getPicture()];
 
-            if ($this->connexion->executeQuery($query, $params)) {
+            if ($this->connection->executeQuery($query, $params)) {
                 $return = true;
             } else {
                 $return = false;

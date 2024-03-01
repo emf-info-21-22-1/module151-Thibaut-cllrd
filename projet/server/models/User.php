@@ -11,11 +11,10 @@ class User implements JsonSerializable
   private $picture;
 
   #Constructor
-  public function __construct($mail, $password)
+  public function __construct($mail)
   {
 
     $this->mail = $mail;
-    $this->password = $password;
     $this->picture = null;
 
   }
@@ -74,14 +73,21 @@ class User implements JsonSerializable
     $this->picture = $picture;
   }
 
+  public function setPassword($password){
+    $this->password = $password;
+  }
 
   //Serialise la classe et retourne un Json
   public function jsonSerialize(): mixed
   {
     return [
       #Par exemple :
-      #'pk' => $this->pk,
-
+      'pk' => $this->pk,
+      'mail' => $this->mail,
+      'picture' => $this->picture,
+      'name' => $this->name,
+      'firstname' => $this->firstname,
+      
     ];
   }
 
