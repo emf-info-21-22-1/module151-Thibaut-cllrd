@@ -4,7 +4,7 @@ Repository du projet personnel du module 151
 ## DriveMyNight
 
 ### Description du projet
-Votre descriptif du cahier des charges ici
+Ce projet vise à créer une plateforme de covoiturage innovante destinée aux participants de soirées et événements, leur permettant de partager des trajets en toute sécurité.
 
 ### Arborescence
 - L'analyse et les différents tests technos sont effectués dans /exercices
