@@ -1,6 +1,6 @@
 <?php
 //heberger sous /151/ 
-
+//Test
 
 header('Access-Control-Allow-Origin: http://localhost:8080');
 header('Access-Control-Allow-Credentials: true');
