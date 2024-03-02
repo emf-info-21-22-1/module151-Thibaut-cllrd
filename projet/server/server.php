@@ -1,6 +1,5 @@
 <?php
 //heberger sous /151/ 
-//Test
 
 header('Access-Control-Allow-Origin: http://localhost:8080');
 header('Access-Control-Allow-Credentials: true');
@@ -13,7 +12,6 @@ $sessionCtrl = new SessionCtrl();
 $loginCtrl = new LoginCtrl($sessionCtrl);
 $partyCtrl = new PartyCtrl($sessionCtrl);
 $profileCtrl = new ProfileCtrl($sessionCtrl);
-
 
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {

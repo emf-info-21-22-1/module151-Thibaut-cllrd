@@ -18,11 +18,10 @@ class PartyService
         $return = false;
         $getPartyPk = $this->connection->selectSingleQuery('SELECT pk_party FROM t_party WHERE name=?', [$party]);
         if ($getPartyPk != false) {
-            $query = 'SELECT u.pk_user, u.picture,u.mail, u.name, u.firstname, c.start, c.place, c.direction, c.comment, c.fk_user FROM t_participation p INNER JOIN t_user u ON p.fk_user = u.pk_user INNER JOIN t_car c ON p.fk_car = c.pk_car WHERE p.fk_party = ?';
+            $query = 'SELECT u.pk_user, u.mail, u.picture, u.name, u.firstname, c.start, c.place, c.direction, c.comment, c.fk_user FROM t_participation AS p LEFT JOIN t_user AS u ON p.fk_user = u.pk_user LEFT JOIN t_car AS c ON p.fk_car = c.pk_car WHERE p.fk_party = ?';
             $theParam[] = $getPartyPk['pk_party'];
             //Retourne pour la party toutes les infos necessaire au retour
             $allParticipation = $this->connection->selectQuery($query, $theParam);
-
             //L'array qui va contenir tous les objets
             $final = [];
             foreach ($allParticipation as $row) {
@@ -55,7 +54,7 @@ class PartyService
                 $car->setDirection($direction);
                 $car->setComment($comment);
 
-                $final = [
+                $final[] = [
                     'user' => $user->jsonSerialize(),
                     'car' => $car->jsonSerialize(),
                     'driver' => $driver
