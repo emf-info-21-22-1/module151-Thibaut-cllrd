@@ -66,29 +66,43 @@ class PartyService
     }
 
 
-    public function joinCar($usernameToJoin, $mailJoiner){
+    public function joinCar($usernameToJoin, $mailJoiner, $party){
         $return = false;
+        $pkParty = $this->connection->selectSingleQuery('SELECT pk_party FROM t_party WHERE name=?', [$party]);
         
         $pkUserToJoin = $this->connection->selectSingleQuery('SELECT pk_user FROM t_user WHERE username=?', [$usernameToJoin]);
+        
         $pkJoiner = $this->connection->selectSingleQuery('SELECT pk_user FROM t_user WHERE mail=?', [$mailJoiner]);
-
-        $participationExist = $this->connection->selectSingleQuery('SELECT p.* FROM t_participation AS p JOIN t_car AS c ON p.fk_car = c.pk_car WHERE c.fk_user = ? AND p.fk_user = c.fk_user', [$pkUserToJoin]);
+        
+        $participationExist = $this->connection->selectSingleQuery('SELECT p.* FROM t_participation AS p JOIN t_car AS c ON p.fk_car = c.pk_car WHERE c.fk_user = ? AND p.fk_user = c.fk_user', [$pkUserToJoin['pk_user']]);
+        
         if($participationExist){
             //Si la participation a rejoindre existe
             $fkCarToJoin = $participationExist['fk_car'];
             $nbUsersInCar = $this->connection->selectSingleQuery('SELECT COUNT(*) - 1 AS nbUsersInCar FROM t_participation WHERE fk_car = 1 AND fk_party=?',[$fkCarToJoin]);
+            
             $nbPlacesInCar = $this->connection->selectSingleQuery('SELECT place FROM t_car WHERE pk_car=?',[$fkCarToJoin]);
-            $availableSeats = $nbPlacesInCar - $nbUsersInCar;
+            
+            $availableSeats = $nbPlacesInCar[0] - $nbUsersInCar[0];
             if($availableSeats > 0){
-                //Si il reste de la place alors créer une entrée dans t_participation
                 
+                //Si il reste de la place alors créer une entrée dans t_participation
+                if($this->connection->executeQuery('INSERT INTO t_participation (fk_car,fk_user,fk_party) VALUES (?,?,?)', [$fkCarToJoin, $pkJoiner[0], $pkParty[0]])){
+                    
+                    //Si l'ajout a bien pu être fait
+                    $return = true;
+                }
+                else{
+                    //Si il n a pas été fait correctement
+                    $return = false;
+                }
             }
         }
         else{
             //La voiture qu'il veut rejoindre n'existe pas
             $return = false;
         }
-
+        return $return;
     }
 
 

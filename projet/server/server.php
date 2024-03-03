@@ -18,32 +18,42 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
   if ($_POST['action'] == "checkLogin") {
     $loginCtrl->checkLogin($_POST['mail'], $_POST['password']);
-  } {
+  }
 
-    if ($_POST['action'] == "createProfile") {
-      $username = $_POST['username'];
-      $mail = $_POST['mail'];
-      $name = $_POST['name'];
-      $firstname = $_POST['firstname'];
-      $password = $_POST['password'];
-      
+  if ($_POST['action'] == "createProfile") {
+    $username = $_POST['username'];
+    $mail = $_POST['mail'];
+    $name = $_POST['name'];
+    $firstname = $_POST['firstname'];
+    $password = $_POST['password'];
 
-      if (isset($_POST['picture'])) {
-        $loginCtrl->createProfile($username,$mail, $name, $firstname, $password, $_POST['picture']);
-      } else {
-        $loginCtrl->createProfile($username,$mail, $name, $firstname, $password, null);
-      }
 
-    }
-
-    if ($_POST['action'] == 'joinCar') {
-      $$usernameToJoin = $_POST['username'];
-      $partyCtrl->joinCar($usernameToJoin);
+    if (isset($_POST['picture'])) {
+      $loginCtrl->createProfile($username, $mail, $name, $firstname, $password, $_POST['picture']);
+    } else {
+      $loginCtrl->createProfile($username, $mail, $name, $firstname, $password, null);
     }
 
   }
 
+  if ($_POST['action'] == 'joinCar') {
+    $usernameToJoin = $_POST['username'];
+    $partyCtrl->joinCar($usernameToJoin);
+  }
+
+  if ($_POST['action'] == 'createCar') {
+    $sessionCtrl->set('mail', 'leo@example.com');
+    $start = $_POST['start'];
+    $place = $_POST['place'];
+    $direction = $_POST['direction'];
+    $comment = $_POST['comment'];
+    $profileCtrl->createCar($start, $place, $direction, $comment);
+  }
+
+
+
   if ($_POST['action'] == "disconnect") {
+
 
   }
 }
