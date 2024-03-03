@@ -21,22 +21,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   } {
 
     if ($_POST['action'] == "createProfile") {
+      $username = $_POST['username'];
       $mail = $_POST['mail'];
       $name = $_POST['name'];
       $firstname = $_POST['firstname'];
       $password = $_POST['password'];
+      
 
       if (isset($_POST['picture'])) {
-        $loginCtrl->createProfile($mail, $name, $firstname, $password, $_POST['picture']);
+        $loginCtrl->createProfile($username,$mail, $name, $firstname, $password, $_POST['picture']);
       } else {
-        $loginCtrl->createProfile($mail, $name, $firstname, $password, null);
+        $loginCtrl->createProfile($username,$mail, $name, $firstname, $password, null);
       }
 
     }
 
     if ($_POST['action'] == 'joinCar') {
-      $driver = $_POST['driver'];
-      $partyCtrl->joinCar($driver);
+      $$usernameToJoin = $_POST['username'];
+      $partyCtrl->joinCar($usernameToJoin);
     }
 
   }
@@ -50,8 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
   if ($_GET['action'] == "getParticipations") {
-    $party = $_GET["party"];
-    $partyCtrl->getParticipationsOf($party);
+    $partyCtrl->getParticipationsOf();
   }
 }
 

@@ -11,33 +11,50 @@ class PartyCtrl
         $this->session = $session;
     }
 
-    public function getParticipationsOf($party)
+    public function getParticipationsOf()
     {
-        if (!empty($party)) {
-            $result = $this->partyService->getParticipationsOf($party);
-            if (!empty($result)) {
-                //Les partys sont retournés sous la forme d'un json, tout s'est bien passé
-                http_response_code(200);
-                echo $result;
-            } else {
-                //Une erreur est survenue côté serveur
-                http_response_code(500);
+        //Check si l'utilisateur est toujours connecté
+        if($this->session->has('mail')){
+
+            //Si il est dans une party alors essayer de lui envoyer les véhicules dispo de la party
+            if($this->session->has('party')){
+                $party = $this->session->get('party');
+                if (!empty($party)) {
+                    $result = $this->partyService->getParticipationsOf($party);
+                    if (!empty($result)) {
+                        //Les partys sont retournés sous la forme d'un json, tout s'est bien passé
+                        http_response_code(200);
+                        echo $result;
+                    } else {
+                        //Une erreur est survenue côté serveur
+                        http_response_code(500);
+                    }
+                } else {
+                    //La party est vide
+                    http_response_code(400);
+                }
             }
-        } else {
-            //La party est vide
-            http_response_code(400);
+            else{
+                //Si il n'est plus dans une party alors on ne trouve pas ce qu'il cherche error 404
+                http_response_code(404);
+            }
         }
+        else{
+            //Si il n'est plus connectà alors error 401
+            http_response_code(401);
+        } 
     }
 
-    public function joinCar($driver)
+    public function joinCar($usernameToJoin)
     {
-        if (!empty($driver)) {
-            if ($this->session->has('mail', $this->session)) {
-                $mailUser = $this->session->get('mail');
-                $result = $this->partyService->joinCar($driver, $mailUser);
+        if (!empty($usernameToJoin)) {
+            if ($this->session->has('mail')) {
+                $mailJoiner = $this->session->get('mail');
+                $result = $this->partyService->joinCar($usernameToJoin, $mailJoiner);
             }
             else{
                 //L'utilisateur n'est pas connecté
+                http_response_code(401);
             }
 
         } else {

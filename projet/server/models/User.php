@@ -10,11 +10,13 @@ class User implements JsonSerializable
   private $password;
   private $picture;
 
+  private $username;
+
   #Constructor
-  public function __construct($mail)
+  public function __construct($username)
   {
 
-    $this->mail = $mail;
+    $this->username = $username;
     $this->picture = null;
 
   }
@@ -43,6 +45,10 @@ class User implements JsonSerializable
     return $this->pk;
   }
 
+  public function getUsername(){
+    return $this->username;
+  }
+
   public function getPassword()
   {
     return $this->password;
@@ -58,6 +64,13 @@ class User implements JsonSerializable
   {
     $this->pk = $pk;
   }
+
+  public function setUsername($username){
+    $this->username = $username;
+  }
+
+  public function setMail($mail){
+    $this->mail = $mail;}
 
   public function setName($name)
   {
@@ -81,8 +94,7 @@ class User implements JsonSerializable
   public function jsonSerialize(): mixed
   {
     return [
-      #Par exemple :
-      'pk' => $this->pk,
+      'username' => $this->username,
       'mail' => $this->mail,
       'picture' => $this->picture,
       'name' => $this->name,

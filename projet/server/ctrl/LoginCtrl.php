@@ -14,15 +14,17 @@ class LoginCtrl
         $this->session = $session;
     }
 
-    //check si le login est ok echo 200 si oui et 401 si non
+    //check si le login est ok, retourne 200 si oui et 401 si non
     public function checkLogin($mail, $password)
     {
         if (!empty($mail) && !empty($password)) {
 
-            $user = new User($mail);
+            $user = new User(null);
+            $user->setMail($mail);
             $user->setPassword($password);
             if ($this->loginService->checkLogin($user)) {
                 http_response_code(200);
+                //Ajoute le mail dans la session
                 $this->session->set('mail', $user->getMail());
             } else {
                 http_response_code(401);
@@ -33,19 +35,18 @@ class LoginCtrl
 
     }
     //Créer un nouveau profile
-    public function createProfile($mail, $name, $firstname, $password, $picture)
+    public function createProfile($username, $mail, $name, $firstname, $password, $picture)
     {
-        if (!empty($mail) && !empty($name) && !empty($firstname) && !empty($password)) {
+        if (!empty($username) && !empty($mail) && !empty($name) && !empty($firstname) && !empty($password)) {
             $hashPassword = password_hash($password, PASSWORD_DEFAULT);
-            $user = new User($mail);
+            $user = new User($username);
+            $user->setMail($mail);
             $user->setPassword($hashPassword);
             $user->setName($name);
             $user->setFirstname($firstname);
-            
             if (!empty($picture)) {
                 $user->setPicture($picture);
             }
-
             $result = $this->loginService->createProfile($user);
             if ($result) {
                 http_response_code(200);
