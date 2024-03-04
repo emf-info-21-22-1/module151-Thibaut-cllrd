@@ -13,6 +13,9 @@ $loginCtrl = new LoginCtrl($sessionCtrl);
 $partyCtrl = new PartyCtrl($sessionCtrl);
 $profileCtrl = new ProfileCtrl($sessionCtrl);
 
+$putdata = file_get_contents("php://input");
+parse_str($putdata, $_PUT);
+
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
@@ -60,6 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
   if ($_PUT['action'] == 'editCar') {
+    $sessionCtrl->set('mail', 'alex@example.com');
     $start = $_PUT['start'];
     $place = $_PUT['place'];
     $direction = $_PUT['direction'];

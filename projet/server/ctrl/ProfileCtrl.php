@@ -55,7 +55,20 @@ class ProfileCtrl
       //Verifie que l'utilisateur est toujours connecté
       if ($this->session->has('mail')) {
          $mailUser = $this->session->get('mail');
-         $result = $this->editCar($start, $place, $direction, $comment, $mailUser);
+         $result = $this->profileService->editCar($start, $place, $direction, $comment, $mailUser);
+         if ($result) {
+            //La modif s'est bien passée
+            http_response_code(200);
+         } elseif ($result == 'noChanges') {
+            //Il n y a eu aucune modification car pas besoin succès quand même
+            http_response_code(200);
+         } elseif ($result == 'notHave') {
+            //La voiture n a pas été trouvée
+            http_response_code(404);
+         } else {
+            //Autres problèmes techniques
+            http_response_code(500);
+         }
       } else {
          //L'utilisateur n'est pas connecté
          http_response_code(401);
