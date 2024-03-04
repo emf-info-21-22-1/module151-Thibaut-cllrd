@@ -22,7 +22,6 @@ class PartyService
             $theParam[] = $getPartyPk['pk_party'];
             //Retourne pour la party toutes les infos necessaire au retour
             $allParticipation = $this->connection->selectQuery($query, $theParam);
-
             $allAvailableSeats = $this->connection->selectQuery('SELECT c.pk_car, u.username, c.place AS total_places, c.place - COALESCE(p.participant_count, 0) AS available_seats FROM t_car AS c JOIN t_user AS u ON c.fk_user = u.pk_user LEFT JOIN (SELECT fk_car, COUNT(*) - 1 AS participant_count FROM t_participation WHERE fk_party = ? GROUP BY fk_car) AS p ON c.pk_car = p.fk_car', $theParam);
             //L'array qui va contenir tous les objets json a retourner
             $final = [];

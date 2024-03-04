@@ -83,7 +83,6 @@ class Car implements JsonSerializable
   public function jsonSerialize(): mixed
   {
     return [
-      
       'start' => $this->start,
       'place' => $this->place,
       'direction' => $this->direction,

@@ -42,7 +42,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   }
 
   if ($_POST['action'] == 'createCar') {
-    $sessionCtrl->set('mail', 'leo@example.com');
     $start = $_POST['start'];
     $place = $_POST['place'];
     $direction = $_POST['direction'];
@@ -59,10 +58,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 
 
+if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
+  if ($_PUT['action'] == 'editCar') {
+    $start = $_PUT['start'];
+    $place = $_PUT['place'];
+    $direction = $_PUT['direction'];
+    $comment = $_PUT['comment'];
+    $profileCtrl->editCar($start, $place, $direction, $comment);
+  }
+}
+
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
   if ($_GET['action'] == "getParticipations") {
     $partyCtrl->getParticipationsOf();
+  }
+
+  if ($_GET['action'] == 'getCarInfo') {
+    $profileCtrl->getCarInfo();
   }
 }
 

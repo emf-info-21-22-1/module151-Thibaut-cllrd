@@ -21,12 +21,10 @@ class ProfileCtrl
             if ($result) {
                //L'opération s'est bien passée
                http_response_code(200);
-            }
-            elseif($result == 'alreadyHave'){
+            } elseif ($result == 'alreadyHave') {
                //L'utilisateur a deja une voiture, conflict
                http_response_code(409);
-            }
-            else{
+            } else {
                http_response_code(500);
             }
          } else {
@@ -37,14 +35,32 @@ class ProfileCtrl
          //bad request il manque des infos dans le POST
          http_response_code(400);
       }
-
-
-
-
    }
 
+   public function getCarInfo()
+   {
+      //Verifier que l'utilisateur est toujours connecté
+      if ($this->session->has('mail')) {
+         $mailUser = $this->session->get('mail');
+         $result = $this->profileService->getCarInfo($mailUser);
+         echo $result;
+      } else {
+         //L'utilisateur n'est pas connecté alors 401
+         http_response_code(401);
+      }
+   }
 
-
+   public function editCar($start, $place, $direction, $comment)
+   {
+      //Verifie que l'utilisateur est toujours connecté
+      if ($this->session->has('mail')) {
+         $mailUser = $this->session->get('mail');
+         $result = $this->editCar($start, $place, $direction, $comment, $mailUser);
+      } else {
+         //L'utilisateur n'est pas connecté
+         http_response_code(401);
+      }
+   }
 
 
 }
