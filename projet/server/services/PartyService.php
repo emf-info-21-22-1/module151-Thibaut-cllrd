@@ -104,6 +104,19 @@ class PartyService
         return $return;
     }
 
+    public function removeCar($mailUser){
+        $return = false;
+        $pkUser = $this->connection->selectSingleQuery('SELECT pk_user FROM t_user WHERE mail=',[$mailUser]);
+        $carOfUser = $this->connection->selectSingleQuery('SELECT * FROM t_car WHERE fk_user=?',[$pkUser[0]]);
+        if($carOfUser){
+            //L'utilisateur a une voiture
+
+        }
+        else{
+            //L'utilisateur n a pas de voitures
+        }
+    }
+
 
 }
 

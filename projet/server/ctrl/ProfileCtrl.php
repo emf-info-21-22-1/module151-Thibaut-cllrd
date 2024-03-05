@@ -65,12 +65,37 @@ class ProfileCtrl
          } elseif ($result == 'notHave') {
             //La voiture n a pas été trouvée
             http_response_code(404);
+         } elseif ($result = 'timeError') {
+            //422 Unprocessable Entity
+            http_response_code(422);
          } else {
             //Autres problèmes techniques
             http_response_code(500);
          }
       } else {
          //L'utilisateur n'est pas connecté
+         http_response_code(401);
+      }
+   }
+
+   public function deleteCar()
+   {
+      if ($this->session->has('mail')) {
+         $mailUser = $this->session->get('mail');
+         $result = $this->profileService->deleteCar($mailUser);
+         if ($result) {
+            http_response_code(200);
+         }
+         elseif('notHave'){
+            http_response_code(404);
+         }
+         elseif('timeError'){
+            http_response_code(422);
+         }
+         else{
+            http_response_code(500);
+         }
+      } else {
          http_response_code(401);
       }
    }

@@ -108,7 +108,7 @@ class ProfileService
                                 //Il y a eu une erreur alors
                                 $return = false;
                             }
-                        } elseif('noStart') {
+                        } elseif ('noStart') {
                             //L'heure de départ est dans au moins 30 minutes et aucun nouveau start
                             if ($this->connection->executeQuery($query, $params)) {
                                 $return = true;
@@ -116,8 +116,7 @@ class ProfileService
                                 //Il y a eu une erreur alors
                                 $return = false;
                             }
-                        }
-                        elseif('timeError'){
+                        } elseif ('timeError') {
                             //Il y a un nouveau start nais il ne respect pas la condition de temps
                             $return = 'timeError';
                         }
@@ -146,6 +145,8 @@ class ProfileService
         }
         return $return;
     }
+    //Cette fonction test si start de la voiture est valide et si il est dans au moins 10 minutes
+    //Retourn true si oui, 'timeError' si c'est moins de 10 minutes et 'noStart' si start est vide
     private function isStartTimeValid($start)
     {
         $return = false;
@@ -156,17 +157,59 @@ class ProfileService
 
 
         if (!empty($start)) {
-            if($startDateTime >= $nowPlus10Min){
+            if ($startDateTime >= $nowPlus10Min) {
                 $return = true;
-            }
-            else{
+            } else {
                 $return = 'timeError';
             }
-        }
-        else{
+        } else {
             $return = 'noStart';
         }
 
+        return $return;
+    }
+
+    public function deleteCar($mailUser)
+    {
+        $return = false;
+        $pkUser = $this->connection->selectSingleQuery('SELECT pk_user FROM t_user WHERE mail=', [$mailUser]);
+        $carOfUser = $this->connection->selectSingleQuery('SELECT * FROM t_car WHERE fk_user=?', [$pkUser[0]]);
+
+        if ($carOfUser) {
+            //L'utilisateur a une voiture
+            $participationOfCar = $this->connection->selectSingleQuery('SELECT * FROM t_participation WHERE fk_car=? AND fk_user=?', [$carOfUser['pk_car'], $pkUser[0]]);
+            if ($participationOfCar) {
+                //la voiture est dans disponible dans la fête
+                $start = new DateTime($carOfUser['start']);
+                $now = new DateTime();
+                $nowPlus30Min = clone $now;
+                $nowPlus30Min->modify('+30 minutes');
+                if ($start >= $nowPlus30Min) {
+                    //La voiture part dans au moins 30 minutes donc ok
+                    if ($this->connection->executeQuery('DELETE FROM t_car WHERE fk_user=?', [$pkUser[0]])) {
+                        //La voiture a été supprimée
+                        $return = true;
+                    } else {
+                        //erreur lors de la suppresion
+                        $return = false;
+                    }
+                } else {
+                    //La voiture part dans moins de 30 minutes donc pas possible
+                    $return = 'errorTime';
+                }
+            } else {
+                //La voiture n'est pas dans une fête
+                if ($this->connection->executeQuery('DELETE FROM t_car WHERE fk_user=?', [$pkUser[0]])) {
+                    //La voiture a été supprimée
+                    $return = true;
+                } else {
+                    //erreur lors de la suppresion
+                    $return = false;
+                }
+            }
+        } else {
+            $return = 'notHave';
+        }
         return $return;
     }
 

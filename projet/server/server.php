@@ -15,6 +15,7 @@ $profileCtrl = new ProfileCtrl($sessionCtrl);
 
 $putdata = file_get_contents("php://input");
 parse_str($putdata, $_PUT);
+parse_str($putdata, $_DELETE);
 
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -63,7 +64,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
   if ($_PUT['action'] == 'editCar') {
-    $sessionCtrl->set('mail', 'alex@example.com');
     $start = $_PUT['start'];
     $place = $_PUT['place'];
     $direction = $_PUT['direction'];
@@ -81,6 +81,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
   if ($_GET['action'] == 'getCarInfo') {
     $profileCtrl->getCarInfo();
   }
+}
+
+//Ecouteur des requêtes DELETE
+if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
+  if ($_DELETE['action'] == 'deleteCar') {
+    $profileCtrl->deleteCar();
+  }
+
+  //Appelé lorsque l'utilisateur veut retirer sa voiture de la soirée
+  if($_DELETE['action'] == 'removeCar'){
+    $partyCtrl->removeCar();
+  }
+  
 }
 
 ?>

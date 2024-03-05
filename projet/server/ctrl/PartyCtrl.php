@@ -43,8 +43,7 @@ class PartyCtrl
         }
     }
 
-    public function joinCar($usernameToJoin)
-    {
+    public function joinCar($usernameToJoin){
         if (!empty($usernameToJoin)) {
             if ($this->session->has('mail')) {
                 if ($this->session->has('party')) {
@@ -83,7 +82,12 @@ class PartyCtrl
 
     }
 
-
+    public function removeCar(){
+        if (!empty($this->session->get('mail'))) {
+            $mailUser = $this->session->get('mail');
+            $result = $this->partyService->removeCar($mailUser);
+        }
+    }
 
 
 
