@@ -67,7 +67,7 @@ class ProfileService
         $carUser = $this->connection->selectSingleQuery('SELECT * FROM t_car WHERE fk_user=?', [$pkUser[0]]);
         //Verifie si l'user a une voiture
         if ($carUser) {
-            $participation = $this->connection->selectSingleQuery('SELECT * FROM t_participation WHERE fk_user=? AND fk_car=?', [$pkUser[0], $carUser['pk_car']]);
+            $participation = $this->connection->selectSingleQuery('SELECT * FROM t_participation WHERE fk_user=?', [$pkUser[0]]);
             $updates = [];
             $params = [];
             if (!empty($start)) {

@@ -110,12 +110,14 @@ class PartyService
         $carOfUser = $this->connection->selectSingleQuery('SELECT * FROM t_car WHERE fk_user=?',[$pkUser[0]]);
         if($carOfUser){
             //L'utilisateur a une voiture
-
+            $participationOfCar = $this->connection->selectSingleQuery('SELECT * FROM t_participation WHERE fk',[$pkUser[0]]);
         }
         else{
             //L'utilisateur n a pas de voitures
         }
     }
+
+  
 
 
 }
