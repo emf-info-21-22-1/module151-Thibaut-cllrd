@@ -33,7 +33,7 @@ class PartyService
                 $place = $row['place'];
                 $direction = $row['direction'];
                 $comment = $row['comment'];
-                
+
                 //Creation user et voiture pour utiliser le json_encode
                 $user = new User($username);
                 $user->setPicture($picture);
@@ -45,7 +45,7 @@ class PartyService
 
                 $availableSeats = -1;
                 foreach ($allAvailableSeats as $carRow) {
-                    if($carRow['username'] == $username){
+                    if ($carRow['username'] == $username) {
                         $availableSeats = $carRow['available_seats'];
                         break;
                     }
@@ -53,7 +53,7 @@ class PartyService
                 $final[] = [
                     'user' => $user->jsonSerialize(),
                     'car' => $car->jsonSerialize(),
-                    'availableSeats'=>$availableSeats
+                    'availableSeats' => $availableSeats
                 ];
             }
             $jsonFinal = json_encode(['participations' => $final], JSON_PRETTY_PRINT);
@@ -65,59 +65,86 @@ class PartyService
     }
 
 
-    public function joinCar($usernameToJoin, $mailJoiner, $party){
+    public function joinCar($usernameToJoin, $mailJoiner, $party)
+    {
         $return = false;
         $pkParty = $this->connection->selectSingleQuery('SELECT pk_party FROM t_party WHERE name=?', [$party]);
-        
+
         $pkUserToJoin = $this->connection->selectSingleQuery('SELECT pk_user FROM t_user WHERE username=?', [$usernameToJoin]);
-        
+
         $pkJoiner = $this->connection->selectSingleQuery('SELECT pk_user FROM t_user WHERE mail=?', [$mailJoiner]);
-        
+
         $participationExist = $this->connection->selectSingleQuery('SELECT p.* FROM t_participation AS p JOIN t_car AS c ON p.fk_car = c.pk_car WHERE c.fk_user = ? AND p.fk_user = c.fk_user', [$pkUserToJoin['pk_user']]);
-        
-        if($participationExist){
+
+        if ($participationExist) {
             //Si la participation a rejoindre existe
             $fkCarToJoin = $participationExist['fk_car'];
-            $nbUsersInCar = $this->connection->selectSingleQuery('SELECT COUNT(*) - 1 AS nbUsersInCar FROM t_participation WHERE fk_car = 1 AND fk_party=?',[$fkCarToJoin]);
-            
-            $nbPlacesInCar = $this->connection->selectSingleQuery('SELECT place FROM t_car WHERE pk_car=?',[$fkCarToJoin]);
-            
+            $nbUsersInCar = $this->connection->selectSingleQuery('SELECT COUNT(*) - 1 AS nbUsersInCar FROM t_participation WHERE fk_car = 1 AND fk_party=?', [$fkCarToJoin]);
+
+            $nbPlacesInCar = $this->connection->selectSingleQuery('SELECT place FROM t_car WHERE pk_car=?', [$fkCarToJoin]);
+
             $availableSeats = $nbPlacesInCar[0] - $nbUsersInCar[0];
-            if($availableSeats > 0){
-                
+            if ($availableSeats > 0) {
+
                 //Si il reste de la place alors créer une entrée dans t_participation
-                if($this->connection->executeQuery('INSERT INTO t_participation (fk_car,fk_user,fk_party) VALUES (?,?,?)', [$fkCarToJoin, $pkJoiner[0], $pkParty[0]])){
-                    
+                if ($this->connection->executeQuery('INSERT INTO t_participation (fk_car,fk_user,fk_party) VALUES (?,?,?)', [$fkCarToJoin, $pkJoiner[0], $pkParty[0]])) {
+
                     //Si l'ajout a bien pu être fait
                     $return = true;
-                }
-                else{
+                } else {
                     //Si il n a pas été fait correctement
                     $return = false;
                 }
             }
-        }
-        else{
+        } else {
             //La voiture qu'il veut rejoindre n'existe pas
             $return = false;
         }
         return $return;
     }
 
-    public function removeCar($mailUser){
+    public function removeCar($mailUser)
+    {
+        
         $return = false;
-        $pkUser = $this->connection->selectSingleQuery('SELECT pk_user FROM t_user WHERE mail=',[$mailUser]);
-        $carOfUser = $this->connection->selectSingleQuery('SELECT * FROM t_car WHERE fk_user=?',[$pkUser[0]]);
-        if($carOfUser){
+        $pkUser = $this->connection->selectSingleQuery('SELECT pk_user FROM t_user WHERE mail=?', [$mailUser]);
+        $carOfUser = $this->connection->selectSingleQuery('SELECT * FROM t_car WHERE fk_user=?', [$pkUser[0]]);
+        if ($carOfUser) {
             //L'utilisateur a une voiture
-            $participationOfCar = $this->connection->selectSingleQuery('SELECT * FROM t_participation WHERE fk',[$pkUser[0]]);
-        }
-        else{
+            $participationOfCar = $this->connection->selectSingleQuery('SELECT * FROM t_participation WHERE fk_car=?', [$carOfUser['pk_car']]);
+            if ($participationOfCar) {
+                $startDateTime = new DateTime($carOfUser['start']);
+                $now = new DateTime();
+                $nowPlus30Min = clone $now;
+                $nowPlus30Min->modify('+30 minutes');
+
+                if ($startDateTime >= $nowPlus30Min) {
+                    //La voiture part dans au moins 30 minutes c'est bon
+                    $this->connection->executeQuery('DELETE FROM t_participation WHERE fk_car=?', [$carOfUser['pk_car']]);
+                        if(!$this->connection->selectQuery('SELECT * FROM t_participation WHERE fk_car=?', $carOfUser['pk_user'])){
+                            //Le remove s'est bien passé
+                            $return = 'ok';
+                        }
+                        else {
+                            //Erreur technique
+                            $return = false;
+                        }  
+                } else {                  
+                    //La voiture part dans moins de 30 minutes, impossible
+                    $return = 'errorTime';
+                }
+            } else {
+                //Sa voiture n'est pas dans une fête
+                $return = 'notInParty';
+            }
+        } else {
             //L'utilisateur n a pas de voitures
+            $return = 'notHaveCar';
         }
+        return $return;
     }
 
-  
+
 
 
 }

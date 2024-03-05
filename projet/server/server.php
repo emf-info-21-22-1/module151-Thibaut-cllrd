@@ -3,6 +3,7 @@
 
 header('Access-Control-Allow-Origin: http://localhost:8080');
 header('Access-Control-Allow-Credentials: true');
+date_default_timezone_set('Europe/Paris');
 
 require_once('ctrl/LoginCtrl.php');
 require_once('ctrl/PartyCtrl.php');
@@ -70,6 +71,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
     $comment = $_PUT['comment'];
     $profileCtrl->editCar($start, $place, $direction, $comment);
   }
+
+  if($_PUT['action'] == 'editProfile'){
+    $name = $_PUT['name'];
+    $firstname = $_PUT['firstname'];
+    $password = $_PUT['password'];
+    $picture = $_PUT['picture'];
+    $username = $_PUT['username'];
+
+    $profileCtrl->editProfile($name, $firstname, $password, $picture, $username);
+  }
 }
 
 
@@ -80,6 +91,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
   if ($_GET['action'] == 'getCarInfo') {
     $profileCtrl->getCarInfo();
+  }
+
+  if($_GET['action'] == 'getProfile'){
+    $profileCtrl->getProfile();
   }
 }
 
@@ -92,6 +107,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
   //Appelé lorsque l'utilisateur veut retirer sa voiture de la soirée
   if($_DELETE['action'] == 'removeCar'){
     $partyCtrl->removeCar();
+  }
+
+  if($_DELETE['action'] == 'deleteProfile'){
+    $sessionCtrl->set('mail', 'alex@example.com');
+    $sessionCtrl->set('pkUser', 1);
+    $profileCtrl->deleteProfile();
   }
   
 }

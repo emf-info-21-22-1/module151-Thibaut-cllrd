@@ -85,14 +85,68 @@ class ProfileCtrl
          $result = $this->profileService->deleteCar($mailUser);
          if ($result) {
             http_response_code(200);
-         }
-         elseif('notHave'){
+         } elseif ($result == 'notHave') {
             http_response_code(404);
-         }
-         elseif('timeError'){
+         } elseif ($result == 'timeError') {
             http_response_code(422);
+         } else {
+            http_response_code(500);
          }
-         else{
+      } else {
+         http_response_code(401);
+      }
+   }
+
+   public function getProfile()
+   {
+      if ($this->session->has('mail')) {
+         $result = $this->profileService->getProfile($this->session->get('pkUser'));
+         if ($result) {
+            http_response_code(200);
+            echo $result;
+         } else {
+            http_response_code(500);
+         }
+      } else {
+         http_response_code(401);
+      }
+   }
+
+   public function editProfile($name, $firstname, $password, $picture, $username)
+   {
+      $user = new User($username);
+      $user->setName($name);
+      $user->setFirstname($firstname);
+      $user->setPassword($password);
+      $user->setPicture($picture);
+
+      if ($this->session->has('pkUser')) {
+         $result = $this->profileService->editProfile($user, $this->session->get('pkUser'));
+         if ($result == 'ok') {
+            http_response_code(200);
+         } elseif ($result == 'noChanges') {
+            http_response_code(200);
+         } else {
+            http_response_code(500);
+         }
+      } else {
+         http_response_code(401);
+      }
+   }
+
+   public function deleteProfile()
+   {
+      if ($this->session->has('pkUser')) {
+         $result = $this->profileService->deleteProfile($this->session->get('pkUser'));
+         if ($result == 'ok') {
+            
+            http_response_code(200);
+         } elseif ($result == 'isDriver') {
+            
+            http_response_code(403);
+         } elseif ($result == 'isInParty') {
+            http_response_code(403);
+         } else {
             http_response_code(500);
          }
       } else {
@@ -102,8 +156,3 @@ class ProfileCtrl
 
 
 }
-
-
-
-
-?>

@@ -43,7 +43,8 @@ class PartyCtrl
         }
     }
 
-    public function joinCar($usernameToJoin){
+    public function joinCar($usernameToJoin)
+    {
         if (!empty($usernameToJoin)) {
             if ($this->session->has('mail')) {
                 if ($this->session->has('party')) {
@@ -82,10 +83,35 @@ class PartyCtrl
 
     }
 
-    public function removeCar(){
+    public function removeCar()
+    {
         if (!empty($this->session->get('mail'))) {
             $mailUser = $this->session->get('mail');
             $result = $this->partyService->removeCar($mailUser);
+            if ($result == 'ok') {
+                //Tout s'est bien passé
+                http_response_code(200);
+            }
+            elseif($result == 'errorTime'){
+                //Les temps obligatoires sont dépassés
+                http_response_code(422);
+            }
+            elseif($result == 'notInParty'){
+                //La voitures n'est pas dans une party
+                //409 = conflict                
+                http_response_code(409);
+            }
+            elseif($result == 'notHaveCar'){
+                //L'utilisateur n'a pas de voiture
+                http_response_code(404);
+            }
+            else{
+                //Autre erreur technique
+                http_response_code(500);
+            }
+        }
+        else{
+            http_response_code(401);
         }
     }
 
@@ -95,5 +121,3 @@ class PartyCtrl
 
 
 
-
-?>
