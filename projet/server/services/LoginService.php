@@ -12,14 +12,13 @@ class LoginService
 
 
     //Check le login et retourne vrai si c'est ok
-    public function checkLogin($user)
-    {
+    public function checkLogin($user){
         $return = false;
         $userData = $this->connection->selectSingleQuery('SELECT * FROM t_user WHERE mail= ?', [$user->getMail()]);
         if ($userData) {
         $password = $userData['password'];
             if (password_verify($user->getPassword(), $password)) {
-                $return = true;
+                $return = $userData['pk_user'];
             } else {
                 //Password incorrecte
                 $return = false;

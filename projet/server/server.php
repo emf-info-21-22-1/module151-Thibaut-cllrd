@@ -57,8 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 
   if ($_POST['action'] == "disconnect") {
-
-
+    $profileCtrl->disconnect();
   }
 }
 
@@ -72,7 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
     $profileCtrl->editCar($start, $place, $direction, $comment);
   }
 
-  if($_PUT['action'] == 'editProfile'){
+  if ($_PUT['action'] == 'editProfile') {
     $name = $_PUT['name'];
     $firstname = $_PUT['firstname'];
     $password = $_PUT['password'];
@@ -93,7 +92,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $profileCtrl->getCarInfo();
   }
 
-  if($_GET['action'] == 'getProfile'){
+  if ($_GET['action'] == 'getProfile') {
     $profileCtrl->getProfile();
   }
 }
@@ -105,16 +104,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
   }
 
   //Appelé lorsque l'utilisateur veut retirer sa voiture de la soirée
-  if($_DELETE['action'] == 'removeCar'){
+  if ($_DELETE['action'] == 'removeCar') {
     $partyCtrl->removeCar();
   }
 
-  if($_DELETE['action'] == 'deleteProfile'){
-    $sessionCtrl->set('mail', 'alex@example.com');
-    $sessionCtrl->set('pkUser', 1);
+  if ($_DELETE['action'] == 'deleteProfile') {
     $profileCtrl->deleteProfile();
   }
-  
+
 }
 
 ?>

@@ -13,13 +13,13 @@ class PartyService
 
 
 
-    public function getParticipationsOf($party)
+    public function getParticipationsOf($pkUser)
     {
         $return = false;
-        $getPartyPk = $this->connection->selectSingleQuery('SELECT pk_party FROM t_party WHERE name=?', [$party]);
-        if ($getPartyPk != false) {
+        $getPartyPk = $this->connection->selectSingleQuery('SELECT fk_party FROM t_participation WHERE fk_user=?', [$pkUser]);
+        if ($getPartyPk) {
             $query = 'SELECT u.username, u.mail, u.picture, c.start, c.place, c.direction, c.comment FROM t_participation p JOIN t_car c ON p.fk_car = c.pk_car JOIN t_user u ON c.fk_user = u.pk_user WHERE p.fk_party = ? GROUP BY c.pk_car';
-            $theParam[] = $getPartyPk['pk_party'];
+            $theParam[] = $getPartyPk['fk_party'];
             //Retourne pour la party toutes les infos necessaire au retour
             $allParticipation = $this->connection->selectQuery($query, $theParam);
             $allAvailableSeats = $this->connection->selectQuery('SELECT c.pk_car, u.username, c.place AS total_places, c.place - COALESCE(p.participant_count, 0) AS available_seats FROM t_car AS c JOIN t_user AS u ON c.fk_user = u.pk_user LEFT JOIN (SELECT fk_car, COUNT(*) - 1 AS participant_count FROM t_participation WHERE fk_party = ? GROUP BY fk_car) AS p ON c.pk_car = p.fk_car', $theParam);
@@ -65,50 +65,63 @@ class PartyService
     }
 
 
-    public function joinCar($usernameToJoin, $mailJoiner, $party)
+    public function joinCar($usernameToJoin, $pkJoiner)
     {
         $return = false;
-        $pkParty = $this->connection->selectSingleQuery('SELECT pk_party FROM t_party WHERE name=?', [$party]);
-
+        $participationsOfJoiner = $this->connection->selectSingleQuery('SELECT * FROM t_participation WHERE fk_user=?', [$pkJoiner]);
         $pkUserToJoin = $this->connection->selectSingleQuery('SELECT pk_user FROM t_user WHERE username=?', [$usernameToJoin]);
 
-        $pkJoiner = $this->connection->selectSingleQuery('SELECT pk_user FROM t_user WHERE mail=?', [$mailJoiner]);
 
-        $participationExist = $this->connection->selectSingleQuery('SELECT p.* FROM t_participation AS p JOIN t_car AS c ON p.fk_car = c.pk_car WHERE c.fk_user = ? AND p.fk_user = c.fk_user', [$pkUserToJoin['pk_user']]);
+        if ($participationsOfJoiner) {
+            //Si le joiner est dans une soirée
+            if (!$this->connection->selectQuery('SELECT * FROM t_participation WHERE fk_user=? AND fk_car IS NOT NULL', [$pkJoiner])) {
+                //Le joiner n'est pas déjà dans une voiture
 
-        if ($participationExist) {
-            //Si la participation a rejoindre existe
-            $fkCarToJoin = $participationExist['fk_car'];
-            $nbUsersInCar = $this->connection->selectSingleQuery('SELECT COUNT(*) - 1 AS nbUsersInCar FROM t_participation WHERE fk_car = 1 AND fk_party=?', [$fkCarToJoin]);
+                if ($participationUserToJoin = $this->connection->selectSingleQuery('SELECT * FROM t_participation WHERE fk_user=? AND fk_car IS NOT NULL', [$pkUserToJoin[0]])) {
+                    //La voiture que l'on veut rejoindre existe
 
-            $nbPlacesInCar = $this->connection->selectSingleQuery('SELECT place FROM t_car WHERE pk_car=?', [$fkCarToJoin]);
+                    if ($participationsOfJoiner['fk_party'] == $participationUserToJoin['fk_party']) {
+                        //Les deux utilisateurs sont dans la meme party
+                        $nbUsersInCar = $this->connection->selectSingleQuery('SELECT COUNT(*) - 1 AS nbUsersInCar FROM t_participation WHERE fk_car = ?', [$participationUserToJoin['fk_car']]);
 
-            $availableSeats = $nbPlacesInCar[0] - $nbUsersInCar[0];
-            if ($availableSeats > 0) {
+                        $nbPlacesInCar = $this->connection->selectSingleQuery('SELECT place FROM t_car WHERE pk_car=?', [$participationUserToJoin['fk_car']]);
 
-                //Si il reste de la place alors créer une entrée dans t_participation
-                if ($this->connection->executeQuery('INSERT INTO t_participation (fk_car,fk_user,fk_party) VALUES (?,?,?)', [$fkCarToJoin, $pkJoiner[0], $pkParty[0]])) {
+                        $availableSeats = $nbPlacesInCar[0] - $nbUsersInCar[0];
+                        if ($availableSeats > 0) {
 
-                    //Si l'ajout a bien pu être fait
-                    $return = true;
+                            //Si il reste de la place alors créer une entrée dans t_participation
+                            if ($this->connection->executeQuery('INSERT INTO t_participation (fk_car,fk_user,fk_party) VALUES (?,?,?)', [$participationUserToJoin['fk_car'], $pkJoiner, $participationUserToJoin['fk_party']])) {
+
+                                //Si l'ajout a bien pu être fait
+                                $return = 'ok';
+                            } else {
+                                //Si il n a pas été fait correctement
+                                $return = false;
+                            }
+                        }
+                    } else {
+                        //Ils ne sont pas dans la meme party
+                        $return = 'notSameParty';
+                    }
                 } else {
-                    //Si il n a pas été fait correctement
-                    $return = false;
+                    //La voiture que l'on veut rejoindre n'existe pas
+                    $return = 'carNotExist';
                 }
+            } else {
+                //Il est déjà dans une voiture
+                $return = 'alreadyInCar';
             }
         } else {
-            //La voiture qu'il veut rejoindre n'existe pas
-            $return = false;
+            //Il est pas dans une soirée
+            $return = 'notInParty';
         }
         return $return;
     }
 
-    public function removeCar($mailUser)
-    {
-        
+    public function removeCar($pkUser){
+
         $return = false;
-        $pkUser = $this->connection->selectSingleQuery('SELECT pk_user FROM t_user WHERE mail=?', [$mailUser]);
-        $carOfUser = $this->connection->selectSingleQuery('SELECT * FROM t_car WHERE fk_user=?', [$pkUser[0]]);
+        $carOfUser = $this->connection->selectSingleQuery('SELECT * FROM t_car WHERE fk_user=?', [$pkUser]);
         if ($carOfUser) {
             //L'utilisateur a une voiture
             $participationOfCar = $this->connection->selectSingleQuery('SELECT * FROM t_participation WHERE fk_car=?', [$carOfUser['pk_car']]);
@@ -121,15 +134,14 @@ class PartyService
                 if ($startDateTime >= $nowPlus30Min) {
                     //La voiture part dans au moins 30 minutes c'est bon
                     $this->connection->executeQuery('DELETE FROM t_participation WHERE fk_car=?', [$carOfUser['pk_car']]);
-                        if(!$this->connection->selectQuery('SELECT * FROM t_participation WHERE fk_car=?', $carOfUser['pk_user'])){
-                            //Le remove s'est bien passé
-                            $return = 'ok';
-                        }
-                        else {
-                            //Erreur technique
-                            $return = false;
-                        }  
-                } else {                  
+                    if (!$this->connection->selectQuery('SELECT * FROM t_participation WHERE fk_car=?', $carOfUser['pk_user'])) {
+                        //Le remove s'est bien passé
+                        $return = 'ok';
+                    } else {
+                        //Erreur technique
+                        $return = false;
+                    }
+                } else {
                     //La voiture part dans moins de 30 minutes, impossible
                     $return = 'errorTime';
                 }

@@ -22,10 +22,12 @@ class LoginCtrl
             $user = new User(null);
             $user->setMail($mail);
             $user->setPassword($password);
-            if ($this->loginService->checkLogin($user)) {
+            $result = $this->loginService->checkLogin($user);
+            if ($result) {
                 http_response_code(200);
                 //Ajoute le mail dans la session
                 $this->session->set('mail', $user->getMail());
+                $this->session->set('pkUser', $result);
             } else {
                 http_response_code(401);
             }
@@ -35,8 +37,7 @@ class LoginCtrl
 
     }
     //Créer un nouveau profile
-    public function createProfile($username, $mail, $name, $firstname, $password, $picture)
-    {
+    public function createProfile($username, $mail, $name, $firstname, $password, $picture){
         if (!empty($username) && !empty($mail) && !empty($name) && !empty($firstname) && !empty($password)) {
             $hashPassword = password_hash($password, PASSWORD_DEFAULT);
             $user = new User($username);

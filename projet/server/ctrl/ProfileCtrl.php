@@ -17,7 +17,7 @@ class ProfileCtrl
          //Si la requete POST est complète
          if ($this->session->has("mail")) {
             //Si l'utilisateur est toujours connecté
-            $result = $this->profileService->createCar($start, $place, $direction, $comment, $this->session->get('mail'));
+            $result = $this->profileService->createCar($start, $place, $direction, $comment, $this->session->get('pkUser'));
             if ($result) {
                //L'opération s'est bien passée
                http_response_code(200);
@@ -41,8 +41,7 @@ class ProfileCtrl
    {
       //Verifier que l'utilisateur est toujours connecté
       if ($this->session->has('mail')) {
-         $mailUser = $this->session->get('mail');
-         $result = $this->profileService->getCarInfo($mailUser);
+         $result = $this->profileService->getCarInfo($this->session->get('pkUser'));
          echo $result;
       } else {
          //L'utilisateur n'est pas connecté alors 401
@@ -54,8 +53,7 @@ class ProfileCtrl
    {
       //Verifie que l'utilisateur est toujours connecté
       if ($this->session->has('mail')) {
-         $mailUser = $this->session->get('mail');
-         $result = $this->profileService->editCar($start, $place, $direction, $comment, $mailUser);
+         $result = $this->profileService->editCar($start, $place, $direction, $comment, $this->session->get('pkUser'));
          if ($result) {
             //La modif s'est bien passée
             http_response_code(200);
@@ -81,8 +79,7 @@ class ProfileCtrl
    public function deleteCar()
    {
       if ($this->session->has('mail')) {
-         $mailUser = $this->session->get('mail');
-         $result = $this->profileService->deleteCar($mailUser);
+         $result = $this->profileService->deleteCar($this->session->get('pkUser'));
          if ($result) {
             http_response_code(200);
          } elseif ($result == 'notHave') {
@@ -139,10 +136,8 @@ class ProfileCtrl
       if ($this->session->has('pkUser')) {
          $result = $this->profileService->deleteProfile($this->session->get('pkUser'));
          if ($result == 'ok') {
-            
             http_response_code(200);
          } elseif ($result == 'isDriver') {
-            
             http_response_code(403);
          } elseif ($result == 'isInParty') {
             http_response_code(403);
@@ -151,6 +146,19 @@ class ProfileCtrl
          }
       } else {
          http_response_code(401);
+      }
+   }
+
+   public function disconnect()
+   {
+      if ($this->session->has('mail')) {
+         //L'utilisateur s'est déconnecté avec succès
+         http_response_code(200);
+         $this->session->clear();
+
+      } else {
+         //204 no content, l'utilisateur est déjà déconnecté
+         http_response_code(204);
       }
    }
 

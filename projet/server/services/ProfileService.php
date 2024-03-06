@@ -11,15 +11,14 @@ class ProfileService
     }
 
 
-    function createCar($start, $place, $direction, $comment, $mailUser)
+    function createCar($start, $place, $direction, $comment, $pkUser)
     {
         $return = false;
-        $pkUser = $this->connection->selectSingleQuery('SELECT pk_user FROM t_user WHERE mail=?', [$mailUser]);
 
-        if (!$this->connection->selectQuery('SELECT * FROM t_car WHERE fk_user=?', [$pkUser[0]])) {
+        if (!$this->connection->selectQuery('SELECT * FROM t_car WHERE fk_user=?', [$pkUser])) {
             //Si l'utilisateur n'a pas déjà une voiture
 
-            if ($this->connection->executeQuery('INSERT INTO t_car (start,place,direction,comment,fk_user) VALUES(?,?,?,?,?)', [$start, $place, $direction, $comment, $pkUser[0]])) {
+            if ($this->connection->executeQuery('INSERT INTO t_car (start,place,direction,comment,fk_user) VALUES(?,?,?,?,?)', [$start, $place, $direction, $comment, $pkUser])) {
                 //Si la voiture a bien été ajouté
                 $return = true;
             } else {
@@ -33,11 +32,10 @@ class ProfileService
         return $return;
     }
 
-    public function getCarInfo($mailUser)
+    public function getCarInfo($pkUser)
     {
         $return = false;
-        $pkUser = $this->connection->selectSingleQuery('SELECT pk_user FROM t_user WHERE mail=?', [$mailUser]);
-        $carUser = $this->connection->selectSingleQuery('SELECT * FROM t_car WHERE fk_user=?', [$pkUser[0]]);
+        $carUser = $this->connection->selectSingleQuery('SELECT * FROM t_car WHERE fk_user=?', [$pkUser]);
         //Verifie que l'utilisateur a une voiture
         if ($carUser) {
             $start = $carUser['start'];
@@ -60,14 +58,13 @@ class ProfileService
         return $return;
     }
 
-    public function editCar($start, $place, $direction, $comment, $mailUser)
+    public function editCar($start, $place, $direction, $comment, $pkUser)
     {
         $return = false;
-        $pkUser = $this->connection->selectSingleQuery('SELECT pk_user FROM t_user WHERE mail=?', [$mailUser]);
-        $carUser = $this->connection->selectSingleQuery('SELECT * FROM t_car WHERE fk_user=?', [$pkUser[0]]);
+        $carUser = $this->connection->selectSingleQuery('SELECT * FROM t_car WHERE fk_user=?', [$pkUser]);
         //Verifie si l'user a une voiture
         if ($carUser) {
-            $participation = $this->connection->selectSingleQuery('SELECT * FROM t_participation WHERE fk_user=?', [$pkUser[0]]);
+            $participation = $this->connection->selectSingleQuery('SELECT * FROM t_participation WHERE fk_user=?', [$pkUser]);
             $updates = [];
             $params = [];
             if (!empty($start)) {
@@ -169,11 +166,10 @@ class ProfileService
         return $return;
     }
 
-    public function deleteCar($mailUser)
+    public function deleteCar($pkUser)
     {
         $return = false;
-        $pkUser = $this->connection->selectSingleQuery('SELECT pk_user FROM t_user WHERE mail=?', [$mailUser]);
-        $carOfUser = $this->connection->selectSingleQuery('SELECT * FROM t_car WHERE fk_user=?', [$pkUser[0]]);
+        $carOfUser = $this->connection->selectSingleQuery('SELECT * FROM t_car WHERE fk_user=?', [$pkUser]);
         if ($carOfUser) {
             //L'utilisateur a une voiture
             $participationsOfCar = $this->connection->selectQuery('SELECT * FROM t_participation WHERE fk_car=?', [$carOfUser['pk_car']]);
@@ -187,7 +183,7 @@ class ProfileService
                     //La voiture part dans au moins 30 minutes donc ok
                     if ($this->connection->executeQuery('DELETE FROM t_participation WHERE fk_car=?', [$carOfUser['pk_car']])) {
 
-                        if ($this->connection->executeQuery('DELETE FROM t_car WHERE fk_user=?', [$pkUser[0]])) {
+                        if ($this->connection->executeQuery('DELETE FROM t_car WHERE fk_user=?', [$pkUser])) {
                             //La voiture a été supprimée
                             $return = true;
                         } else {
@@ -205,7 +201,7 @@ class ProfileService
                 }
             } else {
                 //La voiture n'est pas dans une fête
-                if ($this->connection->executeQuery('DELETE FROM t_car WHERE fk_user=?', [$pkUser[0]])) {
+                if ($this->connection->executeQuery('DELETE FROM t_car WHERE fk_user=?', [$pkUser])) {
                     //La voiture a été supprimée
                     $return = true;
                 } else {
