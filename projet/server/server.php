@@ -42,6 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   }
 
   if ($_POST['action'] == 'joinCar') {
+    
     $usernameToJoin = $_POST['username'];
     $partyCtrl->joinCar($usernameToJoin);
   }

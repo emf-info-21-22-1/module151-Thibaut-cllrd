@@ -12,6 +12,7 @@ class ServiceHttp {
         }
         return ServiceHttp.instance;
     }
+    
     //----------------------------------------------------------------------------
     //GET REQUEST
     //----------------------------------------------------------------------------
@@ -80,8 +81,12 @@ class ServiceHttp {
         $.ajax({
             type: "POST",
             dataType: "json",
-            url: this.URL,
-            data: 'action=checkLogin&mail=' + mail + '&password=' + password,
+            url: "http://localhost:8081/server.php",
+            data: JSON.stringify({
+                action: "checkLogin",
+                mail: mail,
+                password: password
+            }),
             xhrFields: {
                 withCredentials: true
             },

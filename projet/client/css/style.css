@@ -1,0 +1,15 @@
+body{
+    background-color: purple;
+    text-align: center;
+}
+
+.forms{
+    background-color: white;
+    color: black;
+    border-radius: 15px;
+    margin-right: 20%;
+    margin-left: 20%;
+    padding-top: 2%;
+    padding-bottom: 5%;
+    
+}
