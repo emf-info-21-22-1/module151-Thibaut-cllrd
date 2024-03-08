@@ -1,8 +1,10 @@
+
 class ServiceHttp {
     static instance = null;
-    static URL = 'localhost:8081/server.php';
+
 
     constructor() {
+        this.URL = "http://localhost:8081/server.php";
     }
 
     // singleton getInstance pour ne pas le créer plusieurs fois
@@ -12,7 +14,7 @@ class ServiceHttp {
         }
         return ServiceHttp.instance;
     }
-    
+
     //----------------------------------------------------------------------------
     //GET REQUEST
     //----------------------------------------------------------------------------
@@ -26,7 +28,7 @@ class ServiceHttp {
         $.ajax({
             type: "GET",
             dataType: "json",
-            url: this.URL,
+            url: 'localhost:8081/server.php',
             data: 'action=getParticipations',
             success: successCallback,
             error: errorCallback
@@ -55,11 +57,15 @@ class ServiceHttp {
      * @param {*} errorCallback La fonction appelé si erreur
      */
     getProfile(successCallback, errorCallback) {
+        
         $.ajax({
             type: "GET",
             dataType: "json",
             url: this.URL,
             data: 'action=getProfile',
+            xhrFields: {
+                withCredentials: true
+            },
             success: successCallback,
             error: errorCallback
         });
@@ -78,15 +84,12 @@ class ServiceHttp {
      * @param {*} errorCallback La fonction appelé si erreur.
      */
     checkLogin(mail, password, successCallback, errorCallback) {
+        this.disconnect();
         $.ajax({
             type: "POST",
-            dataType: "json",
-            url: "http://localhost:8081/server.php",
-            data: JSON.stringify({
-                action: "checkLogin",
-                mail: mail,
-                password: password
-            }),
+            contentType: "application/x-www-form-urlencoded",
+            url: this.URL,
+            data: "action=checkLogin&mail=" + mail + "&password=" + password,
             xhrFields: {
                 withCredentials: true
             },
@@ -110,9 +113,9 @@ class ServiceHttp {
     createProfile(username, mail, name, firstname, password, picture, successCallback, errorCallback) {
         $.ajax({
             type: "POST",
-            dataType: "json",
+            contentType: "application/x-www-form-urlencoded",
             url: this.URL,
-            data: 'action=createProfile&username=' + username + '&mail=' + mail + '&name=' + name + '&firstname=' + firstname + '&password=' + password + '&picture=' + picture,
+            data: "action=createProfile&username=" + username + "&mail=" + mail + "&name=" + name + "&firstname=" + firstname + "&password=" + password + "&picture=" + picture,
             xhrFields: {
                 withCredentials: true
             },
@@ -169,17 +172,14 @@ class ServiceHttp {
      * @param {*} successCallback La fonction appelé si succès.
      * @param {*} errorCallback La fonction appelé si erreur.
      */
-    disconnect(successCallback, errorCallback) {
+    disconnect() {
         $.ajax({
             type: "POST",
-            dataType: "json",
             url: this.URL,
             data: 'action=disconnect',
             xhrFields: {
                 withCredentials: true
             },
-            success: successCallback,
-            error: errorCallback
         });
     }
 
@@ -239,7 +239,7 @@ class ServiceHttp {
     //DELETE REQUEST
     //----------------------------------------------------------------------------
 
-    
+
     /**
      * Supprime la voiture de l'utilisateur et retourne un code 200 si ok et code d'erreur si pas ok.
      * @param {*} successCallback La fonction appelé si succès.

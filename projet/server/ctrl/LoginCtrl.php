@@ -49,7 +49,7 @@ class LoginCtrl
                 $user->setPicture($picture);
             }
             $result = $this->loginService->createProfile($user);
-            if ($result) {
+            if ($result == 'ok') {
                 http_response_code(200);
             } elseif(!$result) {
                 //Une erreur est survenue et le profil n'a pas été créé

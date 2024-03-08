@@ -217,7 +217,6 @@ class ProfileService
 
     public function getProfile($pkUser)
     {
-        var_dump($pkUser);
         $return = false;
         $profile = $this->connection->selectSingleQuery('SELECT * FROM t_user WHERE pk_user=?', [$pkUser]);
         if ($profile) {

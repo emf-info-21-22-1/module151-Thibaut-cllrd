@@ -96,7 +96,7 @@ class ProfileCtrl
 
    public function getProfile()
    {
-      if ($this->session->has('mail')) {
+      if ($this->session->has('mail')){
          $result = $this->profileService->getProfile($this->session->get('pkUser'));
          if ($result) {
             http_response_code(200);

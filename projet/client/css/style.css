@@ -1,15 +1,79 @@
 body{
+    font-family: Arial, Helvetica, sans-serif;
     background-color: purple;
     text-align: center;
 }
 
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #f8f8f872;
+    padding: 10px;
+  }
+  .header-left {
+    display: flex;
+    align-items: center;
+  }
+  .header-left img {
+    width: 50px;
+    height: auto;
+    margin-right: 15px;
+  }
+  .header-right {
+    text-align: right;
+  }
+  .header-right .text-top {
+    font-weight: bold;
+  }
+  .header-right .text-bottom {
+    padding: 4px;
+    border-style: solid;
+    border-color: black;
+    text-align: center;
+    color: white;
+    background-color: red;
+  }
+
+  .header-right .text-bottom:hover {
+    background-color: rgb(255, 0, 115);
+    cursor: grab;
+  }
+
 .forms{
+    display: flex;
+    flex-direction: column; /* Organise les enfants verticalement */
+    align-items: center; /* Centre horizontalement les enfants */
+    justify-content: center; /* Centre verticalement les enfants (si nécessaire) */
     background-color: white;
     color: black;
     border-radius: 15px;
-    margin-right: 20%;
-    margin-left: 20%;
+    margin: auto; /* Centre le `.forms` lui-même horizontalement si son parent est également centré */
+    margin-top: 5%; /* Ajustez selon vos besoins */
+    margin-bottom: 5%; /* Ajustez selon vos besoins */
     padding-top: 2%;
     padding-bottom: 5%;
+    width: 60%; /* Ajustez la largeur selon vos besoins */
     
+}
+
+#button{
+    margin-top: 20px;
+}
+
+
+.container {
+    display: flex;
+    align-items: center; /* Ceci aligne les éléments enfants verticalement au centre */
+}
+.profilePic {
+    width: 80px; /* Largeur fixe pour toutes les images */
+    height: 80px; /* Hauteur fixe pour toutes les images */
+    object-fit: cover; /* Redimensionne l'image pour couvrir entièrement le cadre sans perdre ses proportions. */
+    border-radius: 100%; /* Optionnel: ajoute des bords arrondis à l'image */
+}
+#uploadLink {
+    color: blue;
+    cursor: pointer;
+    margin-left: 20px; /* Ajoute un peu d'espace entre l'image et le texte */
 }

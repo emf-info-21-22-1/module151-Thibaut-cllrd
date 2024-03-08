@@ -24,6 +24,7 @@ class LoginCtrl {
 
     successLogin(){
         alert('succes');
+        window.location.href = 'userPage.html';
     }
 
     errorLogin(){
@@ -33,6 +34,6 @@ class LoginCtrl {
 
 // Assurez-vous que le script s'exécute après que le DOM soit entièrement chargé.
 document.addEventListener('DOMContentLoaded', () => {
-    new LoginCtrl('loginForm');
+    new LoginCtrl();
     
 });

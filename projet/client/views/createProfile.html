@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>DriveMyNight - s'inscrire</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <meta charset="utf-8">
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="../js/ctrl/CreateProfileCtrl.js"></script>
+    <script src="../js/services/ServiceHttp.js"></script>
+
+</head>
+
+<body>
+    <div class="forms">
+        <h1>S'inscrire</h1>
+        <form id="createProfileForm" method="POST">
+            <p>Adresse e-mail</p>
+            <input id="mail" type="email" name="mail" required>
+            <p>Pseudo / nom d'utilisateur</p>
+            <input id="username" type="text" name="username" required>
+            <p>Nom</p>
+            <input id="name" type="text" name="name" required>
+            <p>Prénom</p>
+            <input id="firstname" type="text" name="firstname" required>
+            <p>Mot de passe</p>
+            <input id="password" type="password" name="password" required>
+            <p>Confirmer le mot de passe</p>
+            <input id="confirmPassword" type="password" name="confirmPassword" required><br>
+            <div class="container">
+                <!-- Image preview ici -->
+                <img id="preview" class="profilePic" src="../img/default.png" alt="Image preview">
+            
+                <!-- Lien pour sélectionner une image -->
+                <a id="uploadLink">Sélectionner une photo</a>
+            
+                <!-- L'input de type file est masqué -->
+                <input type="file" id="fileInput" style="display:none;">
+            </div>
+            <button type="submit">Créer un compte</button>
+        </form>
+        <p>Déjà inscrit ? <a href="createProfile.html">se connecter</a></p>
+    </div>
+</body>
+
+</html>

@@ -3,6 +3,7 @@
 
 header('Access-Control-Allow-Origin: http://localhost:8080');
 header('Access-Control-Allow-Credentials: true');
+header('Access-Control-Allow-Headers: Content-Type');
 date_default_timezone_set('Europe/Paris');
 
 require_once('ctrl/LoginCtrl.php');
