@@ -225,7 +225,6 @@ class ProfileService
             $user->setPicture($profile['picture']);
             $user->setName($profile['name']);
             $user->setFirstname($profile['firstname']);
-
             $return = json_encode($user->jsonSerialize());
         } else {
             $return = false;

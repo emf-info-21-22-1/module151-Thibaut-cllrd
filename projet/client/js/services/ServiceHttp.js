@@ -28,8 +28,11 @@ class ServiceHttp {
         $.ajax({
             type: "GET",
             dataType: "json",
-            url: 'localhost:8081/server.php',
+            url: this.URL,
             data: 'action=getParticipations',
+            xhrFields: {
+                withCredentials: true
+            },
             success: successCallback,
             error: errorCallback
         });
@@ -46,6 +49,9 @@ class ServiceHttp {
             dataType: "json",
             url: this.URL,
             data: 'action=getCarInfo',
+            xhrFields: {
+                withCredentials: true
+            },
             success: successCallback,
             error: errorCallback
         });
@@ -131,9 +137,10 @@ class ServiceHttp {
      * @param {*} errorCallback La fonction appelé si erreur.
      */
     joinCar(usernameToJoin, successCallback, errorCallback) {
+        console.log('join');
         $.ajax({
             type: "POST",
-            dataType: "json",
+            contentType: "application/x-www-form-urlencoded",
             url: this.URL,
             data: 'action=joinCar&username=' + usernameToJoin,
             xhrFields: {

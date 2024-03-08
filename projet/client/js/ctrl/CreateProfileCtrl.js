@@ -49,7 +49,7 @@ class CreateProfileCtrl {
             //le mot de passe a bien été saisit
 
             //Aucune picture choisit donc picture par défaut
-            http.createProfile(mail, username, name, firstname, password, picture, this.successCreation, this.errorCreation);
+            http.createProfile(username, mail, name, firstname, password, picture, this.successCreation, this.errorCreation);
 
         }
         else {

@@ -77,3 +77,111 @@ header {
     cursor: pointer;
     margin-left: 20px; /* Ajoute un peu d'espace entre l'image et le texte */
 }
+
+#blocContainer {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: auto; 
+  padding: 20px; 
+}
+
+.bloc {
+  border-radius: 10px;
+  background-color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  padding: 10px;
+  width: 500px; /* Ou une valeur spécifique en pixels ou en pourcentage jusqu'à 100% */
+}
+.bloc:hover{
+  cursor: pointer;
+  border-style: solid;
+  border-color: black;
+}
+
+.img-container img {
+  border-radius: 100%;
+  margin-right: 10px; /* Espacement ajusté entre l'image et les informations de l'utilisateur */
+}
+
+.user-info-container, .seats-departure-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; 
+}
+
+
+/* Style de base de la popup */
+#joinPopup {
+  position: fixed;
+  top: 15%; /* Ajusté de 50% à 30% pour faire apparaître la popup plus haut */
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 300px;
+  background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  display: none;
+  z-index: 1000;
+  padding: 20px;
+}
+
+
+/* Style du titre de la popup */
+#joinPopup h2 {
+  margin-top: 0;
+  color: #333;
+}
+
+#comment{
+  background-color: rgba(0, 255, 255, 0.336);
+  margin: auto;
+}
+
+/* Style des boutons dans la popup */
+#joinPopup button {
+  cursor: pointer;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  margin-top: 20px;
+  margin-right: 10px;
+  font-weight: bold;
+}
+
+/* Couleurs spécifiques pour les boutons */
+#confirmJoin {
+  background-color: #4CAF50; /* Vert */
+  color: white;
+}
+
+#cancelJoin {
+  background-color: #f44336; /* Rouge */
+  color: white;
+}
+
+/* Ajoute une animation de fondu à l'ouverture/fermeture */
+#joinPopup {
+  animation: fadeIn 0.3s;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -40%);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+}
+
+
+
+/* Ajustez les marges et l'espacement selon vos préférences */
+
