@@ -4,6 +4,7 @@
 header('Access-Control-Allow-Origin: http://localhost:8080');
 header('Access-Control-Allow-Credentials: true');
 header('Access-Control-Allow-Headers: Content-Type');
+header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');
 date_default_timezone_set('Europe/Paris');
 
 require_once('ctrl/LoginCtrl.php');
@@ -56,7 +57,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $profileCtrl->createCar($start, $place, $direction, $comment);
   }
 
-
+  if($_POST['action'] == 'addCarParty'){
+    $partyCtrl->addCarParty();
+  }
 
   if ($_POST['action'] == "disconnect") {
     $profileCtrl->disconnect();

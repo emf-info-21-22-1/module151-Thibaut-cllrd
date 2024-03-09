@@ -118,6 +118,40 @@ class PartyService
         return $return;
     }
 
+    public function addCarParty($pkUser){
+        $participationUser = $this->connection->selectSingleQuery('SELECT * FROM t_participation WHERE fk_user=?',[$pkUser]);
+        if($participationUser){
+            //L'utilisateur est dans une fete
+            $isInACar = $this->connection->selectSingleQuery('SELECT * FROM t_participation WHERE fk_user=? AND fk_car IS NOT NULL', [$pkUser]);
+            if(!$isInACar){
+                //L'utilisateur n'est pas déjà dans une voiture
+                $haveCar = $this->connection->selectSingleQuery('SELECT * FROM t_car WHERE fk_user=?', [$pkUser]);
+                if($haveCar){
+                    //L'utilisateur a une voiture
+                    
+                    if($this->connection->executeQuery('INSERT INTO t_participation (fk_user, fk_car, fk_party) VALUES (?,?,?)', [$pkUser, ])){
+                        return 'ok';
+                    }
+                    else{
+                        //Erreur de connection
+                        return false;
+                    }
+                }
+                else{
+                    //L'utilisateur n'a pas de voiture
+                    return 'noCar';
+                }
+            }
+            else{
+                //L'utilisateur est déjà dans une voiture
+                return 'alreadyInCar';
+            }
+        }
+        else{
+            return 'notInParty';
+        }
+    }
+
     public function removeCar($pkUser){
 
         $return = false;

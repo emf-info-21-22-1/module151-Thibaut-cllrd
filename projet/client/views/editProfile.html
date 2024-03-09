@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>DriveMyNight - mon profil</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <meta charset="utf-8">
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="../js/ctrl/EditProfileCtrl.js"></script>
+    <script src="../js/services/ServiceHttp.js"></script>
+</head>
+
+<body>
+    <div class="forms">
+        <h1>Modifier mon profil</h1>
+        <form id="editProfile" method="PUT">
+            <p>Pseudo / nom d'utilisateur</p>
+            <input id="username" type="text" name="username">
+            <p>Nom</p>
+            <input id="name" type="text" name="name">
+            <p>Prénom</p>
+            <input id="firstname" type="text" name="firstname">
+            <p>Changer le mot de  passe</p>
+            <input id="password" type="password" name="password">
+            <p>Confirmer le nouveau mot de passe</p>
+            <input id="confirmPassword" type="password" name="confirmPassword"><br>
+            <div class="container">
+                <!-- Image preview ici -->
+                <img id="preview" class="profilePic" src="../img/default.png" alt="Image preview">
+            
+                <!-- Lien pour sélectionner une image -->
+                <a id="uploadLink">Ajouter une photo</a>
+            
+                <!-- L'input de type file est masqué -->
+                <input type="file" id="fileInput" style="display:none;">
+            </div>
+            <button type="submit">Modifier mon profile</button><br><br>
+            <button id="deleteProfile">Supprimer mon profil</button>
+        </form>
+    </div>
+</body>
+
+</html>

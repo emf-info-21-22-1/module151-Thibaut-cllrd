@@ -222,7 +222,7 @@ class ProfileService
         if ($profile) {
             $user = new User($profile['username']);
             $user->setMail($profile['mail']);
-            $user->setPicture($profile['picture']);
+            $user->setPicture(base64_encode($profile['picture']));
             $user->setName($profile['name']);
             $user->setFirstname($profile['firstname']);
             $return = json_encode($user->jsonSerialize());
@@ -257,25 +257,33 @@ class ProfileService
         }
         if (!empty($picture)) {
             $updates[] = 'picture=?';
-            $params[] = $picture;
+            $params[] = base64_decode($picture);
         }
         if (!empty($username)) {
             $updates[] = 'username=?';
             $params[] = $username;
         }
 
-        if ($updates) {
-            $setQuery = implode(', ', $updates);
-            $params[] = $pkUser;
-
-            if ($this->connection->executeQuery("UPDATE t_user SET $setQuery WHERE pk_user=?", $params)) {
-                $return = 'ok';
-            } else {
+        
+            try{
+                if ($updates) {
+                    $setQuery = implode(', ', $updates);
+                    $params[] = $pkUser;
+                    $request = $this->connection->executeQuery("UPDATE t_user SET $setQuery WHERE pk_user=?", $params);
+                    if ($request) {
+                        var_dump($request);
+                        $return = 'ok';
+                    } else {
+                        $return = false;
+                    }
+                } else {
+                    $return = 'noChanges';
+                }
+            }
+            catch(\Exception $e){
                 $return = false;
             }
-        } else {
-            $return = 'noChanges';
-        }
+            
         return $return;
     }
 

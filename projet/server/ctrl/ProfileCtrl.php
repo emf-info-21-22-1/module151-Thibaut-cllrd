@@ -116,7 +116,6 @@ class ProfileCtrl
       $user->setFirstname($firstname);
       $user->setPassword($password);
       $user->setPicture($picture);
-
       if ($this->session->has('pkUser')) {
          $result = $this->profileService->editProfile($user, $this->session->get('pkUser'));
          if ($result == 'ok') {

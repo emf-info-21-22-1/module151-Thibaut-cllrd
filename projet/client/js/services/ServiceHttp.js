@@ -137,12 +137,25 @@ class ServiceHttp {
      * @param {*} errorCallback La fonction appelé si erreur.
      */
     joinCar(usernameToJoin, successCallback, errorCallback) {
-        console.log('join');
         $.ajax({
             type: "POST",
             contentType: "application/x-www-form-urlencoded",
             url: this.URL,
             data: 'action=joinCar&username=' + usernameToJoin,
+            xhrFields: {
+                withCredentials: true
+            },
+            success: successCallback,
+            error: errorCallback
+        });
+    }
+
+    addCarToParty(successCallback, errorCallback){
+        $.ajax({
+            type: "POST",
+            contentType: "application/x-www-form-urlencoded",
+            url: this.URL,
+            data: 'action=addCarParty',
             xhrFields: {
                 withCredentials: true
             },
@@ -231,9 +244,9 @@ class ServiceHttp {
     editProfile(name, firstname, password, picture, username, successCallback, errorCallback) {
         $.ajax({
             type: "PUT",
-            dataType: "json",
+            contentType: "application/x-www-form-urlencoded",
             url: this.URL,
-            data: 'action=editProfile&name=' + name + '&firstname=' + firstname + '&password=' + password + '&picutre=' + picture + '&username=' + username,
+            data: 'action=editProfile&name=' + name + '&firstname=' + firstname + '&password=' + password + '&picture=' + picture + '&username=' + username,
             xhrFields: {
                 withCredentials: true
             },

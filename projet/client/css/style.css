@@ -1,6 +1,6 @@
 body{
     font-family: Arial, Helvetica, sans-serif;
-    background-color: purple;
+    background-color: rgb(80, 1, 80);
     text-align: center;
 }
 
@@ -8,15 +8,16 @@ header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background-color: #f8f8f872;
+    background-color: #f8f8f8a8;
     padding: 10px;
   }
   .header-left {
     display: flex;
     align-items: center;
+    font-weight: bold;
   }
   .header-left img {
-    width: 50px;
+    width: 60px;
     height: auto;
     margin-right: 15px;
   }
@@ -24,12 +25,12 @@ header {
     text-align: right;
   }
   .header-right .text-top {
-    font-weight: bold;
+    text-align: center;
+    color: white;
+    background-color: rgb(0, 90, 224);
   }
   .header-right .text-bottom {
     padding: 4px;
-    border-style: solid;
-    border-color: black;
     text-align: center;
     color: white;
     background-color: red;
@@ -180,6 +181,28 @@ header {
     transform: translate(-50%, -50%);
   }
 }
+
+.btnAddCar {
+  position: relative;
+}
+
+#addCarToParty {
+  top: -20px;
+  position: relative;
+  padding: 10px 22px;
+  border-radius: 6px;
+  border: none;
+  color: #000000;
+  cursor: pointer;
+  background-color: #ffffff;
+}
+
+#addCarToParty:hover{
+  cursor: pointer;
+  border-style: solid;
+  border-color: black;
+}
+
 
 
 

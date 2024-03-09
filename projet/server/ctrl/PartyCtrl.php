@@ -68,7 +68,37 @@ class PartyCtrl
             //Le conducteur est vide
             http_response_code(400);
         }
+    }
 
+    public function addCarParty(){
+        if($this->session->has('mail')){
+            //L'utilisateur est toujours connecté
+            $result = $this->partyService->addCarParty($this->session->get('pkUser'));
+            if ($result == 'ok') {
+                //L'opération s'est bien passée
+                http_response_code(200);
+            }
+            elseif ($result == 'noCar') {
+                //L'utilisateur n'a pas de voiture
+                http_response_code(404);
+            }
+            elseif( $result == 'alreadyInCar') {
+                //L'utilisateur est déjà dans une voiture
+                http_response_code(409);
+            }
+            elseif($result == 'notInParty') {
+                //L'utilisateur n'est pas dans une party
+                http_response_code(404);
+            }
+            else{
+                //Probleme serveur
+                http_response_code(500);
+            }
+        }
+        else{
+            //L'utilisateur n'est plus connecté
+            http_response_code(401);
+        }
     }
 
     public function removeCar()

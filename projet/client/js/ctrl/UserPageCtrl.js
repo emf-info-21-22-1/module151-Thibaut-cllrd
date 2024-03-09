@@ -1,12 +1,38 @@
 class UserPageCtrl {
     constructor() {
+        
         this.http = new ServiceHttp();
         this.loadPage();
+        //Ecouteur du bouton d'ajout de la voiture à la soirée
+        document.getElementById('addCarToParty').addEventListener('click', () => {
+            this.addCarToParty();
+        });
+        //Ecouteur de se déconnecter
+        document.getElementById('disconnect').addEventListener('click', () => {
+            this.disconnect();
+        });
+        
     }
 
-    loadPage() {
+    loadPage() {      
         this.http.getProfile(this.showUserData, this.error);
         this.http.getParticipationsOfTheParty(this.showCarsOfParty.bind(this), this.error);
+    }
+
+    addCarToParty(){
+        const confirmation = window.confirm("Voulez vous réelement ajouter votre véhicule à cette soirée ?");
+        if(confirmation){
+            this.http.addCarToParty(this.addCarSuccess, this.addCarFail);
+        }
+    }
+
+    disconnect(){
+        const confirmation = window.confirm("Voulez vous réelement vous déconnecter ?");
+        if(confirmation){
+            this.http.disconnect();
+            window.location.reload();
+
+        }
     }
 
     showUserData(data) {
@@ -33,7 +59,7 @@ class UserPageCtrl {
             });
             const direction = car['car']['direction'];
             const comment = car['car']['comment'];
-
+            if(availableSeats > 0){
             const bloc = document.createElement('div');
             bloc.className = 'bloc';
             const imgContainer = document.createElement('div');
@@ -72,7 +98,7 @@ class UserPageCtrl {
             bloc.appendChild(seatsAndDepartureContainer);
 
             blocContainer.appendChild(bloc);
-
+            
 
             bloc.addEventListener('click', function () {
                 document.getElementById('joinPopup').style.display = 'block'; // Montre la popup
@@ -81,7 +107,7 @@ class UserPageCtrl {
                 document.getElementById('confirmJoin').dataset.username=username;
                 
             });
-
+        }
         }
 
         document.getElementById('confirmJoin').addEventListener('click', function () {
@@ -95,14 +121,34 @@ class UserPageCtrl {
             document.getElementById('joinPopup').style.display = 'none'; // Cache la popup sans autres actions
         });
 
-
+        
 
     }
 
+    //Methode appelée si l'utilisateur a reussit a rejoindre une voiture
     joinCarSuccess(){
-        alert('ok');
+        alert('Voiture rejoind avec succès');
+        window.location.reload();
     }
 
+    //Methode appelée si l'utilisateur a reussit a ajouter sa voiture a la soirée
+    addCarSuccess(){
+        alert('nice');
+    }
+
+    //Methode appelée si l'utilisateur n'a pas reussit a ajouter sa voiture a la soirée
+    addCarFail(xhrFields){
+        switch(xhrFields.status){
+            case 401 : alert("Votre session a pris fin, veuillez vous reconnecter"); window.location.href = 'login.html';
+            break;
+            case 404 : alert("Oups, vérifier que vous avez une voiture et que vous êtes bien dans une fête !");
+            break;
+            case 409 : alert("Il semblerait que vous êtes déjà dans une voiture, quittez la pour ajouter la votre !");
+            break;
+            case 500 : alert("Problème serveur");
+            break;
+        }
+    }
 
     error(xhrFields) {
         switch (xhrFields.status) {
@@ -112,7 +158,8 @@ class UserPageCtrl {
                 break;
             case 404: alert("Vous n'êtes dans aucune party");
                 break;
-            case 409 : alert("Conflit, il est possible que vous soyez déjà dans une voiture ou que la voiture dont vous essayez de rejoindre est pleine")
+            case 409 : alert("Conflit, il est possible que vous soyez déjà dans une voiture ou que la voiture dont vous essayez de rejoindre est pleine");
+            break;
         }
 
 
@@ -120,7 +167,7 @@ class UserPageCtrl {
 
 }
 
-// Assurez-vous que le script s'exécute après que le DOM soit entièrement chargé.
+// Créé la classe dès que la page a finit de charger
 document.addEventListener('DOMContentLoaded', () => {
     new UserPageCtrl();
 
