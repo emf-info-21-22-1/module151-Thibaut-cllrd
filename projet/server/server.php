@@ -1,6 +1,8 @@
 <?php
 //heberger sous /151/ 
-
+//PROD
+//header('Access-Control-Allow-Origin: https://colliardt.emf-informatique.ch/151/client/views');
+//LAB
 header('Access-Control-Allow-Origin: http://localhost:8080');
 header('Access-Control-Allow-Credentials: true');
 header('Access-Control-Allow-Headers: Content-Type');

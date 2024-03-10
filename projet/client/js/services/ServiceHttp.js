@@ -4,6 +4,9 @@ class ServiceHttp {
 
 
     constructor() {
+        //PROD
+        //this.URL = "https://colliardt.emf-informatique.ch/151/server/server.php";
+        //LAB
         this.URL = "http://localhost:8081/server.php";
     }
 
@@ -150,7 +153,7 @@ class ServiceHttp {
     }
 
     /**
-     * Rejoind une voiture et retourne code 200 si ok et code d'erreurs si pas ok.
+     * Rejoint une voiture et retourne code 200 si ok et code d'erreurs si pas ok.
      * @param {*} usernameToJoin 
      * @param {*} successCallback La fonction appelé si succès.
      * @param {*} errorCallback La fonction appelé si erreur.

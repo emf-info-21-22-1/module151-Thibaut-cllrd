@@ -191,8 +191,6 @@ class UserPageCtrl {
             case 409 : alert("Conflit, il est possible que vous soyez déjà dans une voiture ou que la voiture dont vous essayez de rejoindre est pleine");
             break;
         }
-
-
     }
 
 }

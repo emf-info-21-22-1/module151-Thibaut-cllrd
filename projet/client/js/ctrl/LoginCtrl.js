@@ -20,7 +20,6 @@ class LoginCtrl {
         const password = this.form.elements["password"].value;
         const http = new ServiceHttp();
         http.checkLogin(email,password, this.successLogin, this.errorLogin);
-        
     }
 
     //Si l'utilisteur a reussi à se loguer
