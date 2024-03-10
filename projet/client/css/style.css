@@ -1,82 +1,162 @@
-body{
-    font-family: Arial, Helvetica, sans-serif;
-    background-color: rgb(80, 1, 80);
-    text-align: center;
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: #300c5e;
+  text-align: center;
+}
+
+.indexTop {
+  height: 50vh;
+  /* 50% de la hauteur de la fenêtre */
+  background-image: url('../img/fond.jpg');
+  background-size: cover;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.indexBottom {
+  height: 50vh;
+  /* 50% de la hauteur de la fenêtre */
+  background-color: #300c5e;
+  /* Couleur de fond */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.indexButtons {
+  display: flex;
+  gap: 10px;
+  /* Espacement entre les boutons */
+}
+
+.indexLoginButton {
+  background-color: #ffffff;
+  color: #000000;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+}
+
+.indexSignUpButton {
+  background-color: #ffffff;
+  color: #000000;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+}
+
+.indexLoginButton:hover {
+  background-color: #d1f8f8;
+}
+
+.indexSignUpButton:hover {
+  background-color: #d1f8f8;
 }
 
 header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background-color: #f8f8f8a8;
-    padding: 10px;
-  }
-  .header-left {
-    display: flex;
-    align-items: center;
-    font-weight: bold;
-  }
-  .header-left img {
-    width: 60px;
-    height: auto;
-    margin-right: 15px;
-  }
-  .header-right {
-    text-align: right;
-  }
-  .header-right .text-top {
-    text-align: center;
-    color: white;
-    background-color: rgb(0, 90, 224);
-  }
-  .header-right .text-bottom {
-    padding: 4px;
-    text-align: center;
-    color: white;
-    background-color: red;
-  }
-
-  .header-right .text-bottom:hover {
-    background-color: rgb(255, 0, 115);
-    cursor: grab;
-  }
-
-.forms{
-    display: flex;
-    flex-direction: column; /* Organise les enfants verticalement */
-    align-items: center; /* Centre horizontalement les enfants */
-    justify-content: center; /* Centre verticalement les enfants (si nécessaire) */
-    background-color: white;
-    color: black;
-    border-radius: 15px;
-    margin: auto; /* Centre le `.forms` lui-même horizontalement si son parent est également centré */
-    margin-top: 5%; /* Ajustez selon vos besoins */
-    margin-bottom: 5%; /* Ajustez selon vos besoins */
-    padding-top: 2%;
-    padding-bottom: 5%;
-    width: 60%; /* Ajustez la largeur selon vos besoins */
-    
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #f8f8f8a8;
+  padding: 10px;
 }
 
-#button{
-    margin-top: 20px;
+.header-left {
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+}
+
+.header-left img {
+  width: 60px;
+  height: auto;
+  margin-right: 15px;
+}
+
+.header-right {
+  text-align: right;
+}
+
+a{
+  text-decoration: none;
+}
+
+.header-right .text-top {
+  text-decoration: none;
+  text-align: center;
+  color: rgb(0, 0, 0);
+  background-color: rgb(255, 255, 255);
+}
+
+.header-right .text-top:hover {
+  cursor: pointer;
+  background-color: #92ffff;
+}
+
+.header-right .text-bottom {
+  padding: 4px;
+  text-align: center;
+  color: white;
+  background-color: red;
+}
+
+.header-right .text-bottom:hover {
+  background-color: rgb(255, 0, 115);
+  cursor: pointer;
+}
+
+.forms {
+  display: flex;
+  flex-direction: column;
+  /* Organise les enfants verticalement */
+  align-items: center;
+  /* Centre horizontalement les enfants */
+  justify-content: center;
+  /* Centre verticalement les enfants (si nécessaire) */
+  background-color: white;
+  color: black;
+  border-radius: 15px;
+  margin: auto;
+  /* Centre le `.forms` lui-même horizontalement si son parent est également centré */
+  margin-top: 5%;
+  /* Ajustez selon vos besoins */
+  margin-bottom: 5%;
+  /* Ajustez selon vos besoins */
+  padding-top: 2%;
+  padding-bottom: 5%;
+  width: 60%;
+  /* Ajustez la largeur selon vos besoins */
+
+}
+
+#button {
+  margin-top: 20px;
 }
 
 
 .container {
-    display: flex;
-    align-items: center; /* Ceci aligne les éléments enfants verticalement au centre */
+  display: flex;
+  align-items: center;
+  /* Ceci aligne les éléments enfants verticalement au centre */
 }
+
 .profilePic {
-    width: 80px; /* Largeur fixe pour toutes les images */
-    height: 80px; /* Hauteur fixe pour toutes les images */
-    object-fit: cover; /* Redimensionne l'image pour couvrir entièrement le cadre sans perdre ses proportions. */
-    border-radius: 100%; /* Optionnel: ajoute des bords arrondis à l'image */
+  width: 80px;
+  /* Largeur fixe pour toutes les images */
+  height: 80px;
+  /* Hauteur fixe pour toutes les images */
+  object-fit: cover;
+  /* Redimensionne l'image pour couvrir entièrement le cadre sans perdre ses proportions. */
+  border-radius: 100%;
+  /* Optionnel: ajoute des bords arrondis à l'image */
 }
+
 #uploadLink {
-    color: blue;
-    cursor: pointer;
-    margin-left: 20px; /* Ajoute un peu d'espace entre l'image et le texte */
+  color: blue;
+  cursor: pointer;
+  margin-left: 20px;
+  /* Ajoute un peu d'espace entre l'image et le texte */
 }
 
 #blocContainer {
@@ -84,8 +164,8 @@ header {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: auto; 
-  padding: 20px; 
+  width: auto;
+  padding: 20px;
 }
 
 .bloc {
@@ -97,9 +177,11 @@ header {
   margin-top: 20px;
   margin-bottom: 20px;
   padding: 10px;
-  width: 500px; /* Ou une valeur spécifique en pixels ou en pourcentage jusqu'à 100% */
+  width: 500px;
+  /* Ou une valeur spécifique en pixels ou en pourcentage jusqu'à 100% */
 }
-.bloc:hover{
+
+.bloc:hover {
   cursor: pointer;
   border-style: solid;
   border-color: black;
@@ -107,20 +189,23 @@ header {
 
 .img-container img {
   border-radius: 100%;
-  margin-right: 10px; /* Espacement ajusté entre l'image et les informations de l'utilisateur */
+  margin-right: 10px;
+  /* Espacement ajusté entre l'image et les informations de l'utilisateur */
 }
 
-.user-info-container, .seats-departure-container {
+.user-info-container,
+.seats-departure-container {
   display: flex;
   flex-direction: column;
-  align-items: flex-start; 
+  align-items: flex-start;
 }
 
 
 /* Style de base de la popup */
 #joinPopup {
   position: fixed;
-  top: 15%; /* Ajusté de 50% à 30% pour faire apparaître la popup plus haut */
+  top: 15%;
+  /* Ajusté de 50% à 30% pour faire apparaître la popup plus haut */
   left: 50%;
   transform: translate(-50%, -50%);
   width: 300px;
@@ -139,7 +224,7 @@ header {
   color: #333;
 }
 
-#comment{
+#comment {
   background-color: rgba(0, 255, 255, 0.336);
   margin: auto;
 }
@@ -157,12 +242,14 @@ header {
 
 /* Couleurs spécifiques pour les boutons */
 #confirmJoin {
-  background-color: #4CAF50; /* Vert */
+  background-color: #4CAF50;
+  /* Vert */
   color: white;
 }
 
 #cancelJoin {
-  background-color: #f44336; /* Rouge */
+  background-color: #f44336;
+  /* Rouge */
   color: white;
 }
 
@@ -176,6 +263,7 @@ header {
     opacity: 0;
     transform: translate(-50%, -40%);
   }
+
   to {
     opacity: 1;
     transform: translate(-50%, -50%);
@@ -197,14 +285,28 @@ header {
   background-color: #ffffff;
 }
 
-#addCarToParty:hover{
+#addCarToParty:hover {
+  cursor: pointer;
+  border-style: solid;
+  border-color: black;
+}
+
+#leaveCar{
+  top: -20px;
+  position: relative;
+  padding: 10px 22px;
+  border-radius: 6px;
+  border: none;
+  color: #000000;
+  cursor: pointer;
+  background-color: #ffffff;
+}
+
+#leaveCar:hover {
   cursor: pointer;
   border-style: solid;
   border-color: black;
 }
 
 
-
-
 /* Ajustez les marges et l'espacement selon vos préférences */
-

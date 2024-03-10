@@ -7,6 +7,12 @@ class UserPageCtrl {
         document.getElementById('addCarToParty').addEventListener('click', () => {
             this.addCarToParty();
         });
+
+        //Ecouteur de quitter la voiture
+        document.getElementById('leaveCar').addEventListener('click', () => {
+            this.leaveCar();
+        });
+
         //Ecouteur de se déconnecter
         document.getElementById('disconnect').addEventListener('click', () => {
             this.disconnect();
@@ -17,6 +23,13 @@ class UserPageCtrl {
     loadPage() {      
         this.http.getProfile(this.showUserData, this.error);
         this.http.getParticipationsOfTheParty(this.showCarsOfParty.bind(this), this.error);
+    }
+
+    leaveCar(){
+        const confirmation = window.confirm("Voulez vous réelement ajouter votre véhicule à cette soirée ?");
+        if(confirmation){
+            this.http.leaveCar(this.successLeave, this.errorLeave);
+        }
     }
 
     addCarToParty(){
@@ -37,11 +50,12 @@ class UserPageCtrl {
 
     showUserData(data) {
         document.getElementById('username').innerText = data['username'];
-        if (data['picture'] != 'null') {
-            document.getElementById('picture').src = data['picture'];
-        }
+        // if (data['picture'] != 'null') {
+        //     document.getElementById('picture').src = data['picture'];
+        // }
     }
 
+    //Affiche toutes les voitures de la soirée afin de les rejoindre.
     showCarsOfParty(data) {
         const carsOfParty = data['participations'];
         const blocContainer = document.getElementById('blocContainer');
@@ -67,7 +81,7 @@ class UserPageCtrl {
             const img = document.createElement('img');
             img.style.maxWidth = '100%';
             img.style.maxHeight = '100px'; // Ajustez selon les besoins
-            img.src = picture ? URL.createObjectURL(picture) : '../img/default.png';
+            img.src = '../img/default.png';//picture ? URL.createObjectURL(picture) : '../img/default.png';
             imgContainer.appendChild(img);
             bloc.appendChild(imgContainer);
 
@@ -125,15 +139,31 @@ class UserPageCtrl {
 
     }
 
-    //Methode appelée si l'utilisateur a reussit a rejoindre une voiture
+    //Si l'utilisateur a reussit a rejoindre une voiture
     joinCarSuccess(){
-        alert('Voiture rejoind avec succès');
+        alert('Voiture rejoint !');
         window.location.reload();
+    }
+
+    successLeave(){
+        alert("Vous n'êtes plus dans cette voiture !");
+        window.location.reload();
+    }
+
+    errorLeave(xhrFields){
+        switch(xhrFields.status){
+            case 401 : alert("Votre session a pris fin, veuillez vous reconnecter"); window.location.href = 'login.html';
+            break;
+            case 404 : alert("Vous n'êtes pas dans une voiture !");
+            break;
+            case 500 : alert("Notre serveur a rencontré un problème");
+            break;
+        }
     }
 
     //Methode appelée si l'utilisateur a reussit a ajouter sa voiture a la soirée
     addCarSuccess(){
-        alert('nice');
+        alert('Votre voiture à été ajouté !');
     }
 
     //Methode appelée si l'utilisateur n'a pas reussit a ajouter sa voiture a la soirée

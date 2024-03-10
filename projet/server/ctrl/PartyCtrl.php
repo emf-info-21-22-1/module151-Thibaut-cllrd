@@ -11,6 +11,9 @@ class PartyCtrl
         $this->session = $session;
     }
 
+    /**
+     * Retourne toutes les voitures d'une soirée en JSON ou un code d'erreur.
+     */
     public function getParticipationsOf()
     {
         //Check si l'utilisateur est toujours connecté
@@ -20,7 +23,7 @@ class PartyCtrl
             if ($result == 'unfound') {
                 //Il n'est pas dans une party
                 http_response_code(404);
-            } elseif (empty($result)) {
+            } elseif (!$result) {
                 //Une erreur est survenue côté serveur
                 http_response_code(500);
             } elseif ($result) {
@@ -34,6 +37,9 @@ class PartyCtrl
         }
     }
 
+    /**
+     * Retourne 200 si l'utilisateur a pu rejoindre la voiture voulu et sinon un code d'erreur.
+     */
     public function joinCar($usernameToJoin)
     {
         if (!empty($usernameToJoin)) {
@@ -70,6 +76,9 @@ class PartyCtrl
         }
     }
 
+    /**
+     * Retourne 200 si la voiture a été ajouté à la fête, sinon un code d'erreur.
+     */
     public function addCarParty(){
         if($this->session->has('mail')){
             //L'utilisateur est toujours connecté
@@ -101,6 +110,9 @@ class PartyCtrl
         }
     }
 
+    /**
+     * Retourne 200 si la voiture a été retirée de la fête, sinon un code d'erreur.
+     */
     public function removeCar()
     {
         if (!empty($this->session->get('mail'))) {

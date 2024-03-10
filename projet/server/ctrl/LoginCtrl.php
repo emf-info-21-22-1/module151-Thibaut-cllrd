@@ -14,7 +14,7 @@ class LoginCtrl
         $this->session = $session;
     }
 
-    //check si le login est ok, retourne 200 si oui et 401 si non
+    //check si le login est ok, retourne 200 si oui, 401 si non et 400 si les champs ne sont pas remplis
     public function checkLogin($mail, $password)
     {
         if (!empty($mail) && !empty($password)) {
@@ -36,7 +36,9 @@ class LoginCtrl
         }
 
     }
-    //Créer un nouveau profile
+    /**
+     * Créé un compte utilisateur et retourne les codes http.
+     */
     public function createProfile($username, $mail, $name, $firstname, $password, $picture){
         if (!empty($username) && !empty($mail) && !empty($name) && !empty($firstname) && !empty($password)) {
             $hashPassword = password_hash($password, PASSWORD_DEFAULT);

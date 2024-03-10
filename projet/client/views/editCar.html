@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>DriveMyNight - ma voiture</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <meta charset="utf-8">
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="../js/ctrl/EditCarCtrl.js"></script>
+    <script src="../js/services/ServiceHttp.js"></script>
+</head>
+
+<body>
+    <div class="forms">
+        <h1>Modifier ma voiture</h1>
+        <form id="editCar" method="PUT">
+            <p>Départ</p>
+            <input id="start" type="datetime-local" name="start" required>
+            <p>Nombre de place(s) sans compter le conducteur</p>
+            <select id="place" name="place" required>
+                <option value="1">1</option>
+                <option value="1">2</option>
+                <option value="1">3</option>
+                <option value="1">4</option>
+                <option value="1">5</option>
+                <option value="1">6</option>
+                <option value="1">7</option>
+                <option value="1">8</option>
+                <option value="1">9</option>
+                <option value="1">10</option>
+                <option value="1">11</option>
+                <option value="1">12</option>
+            </select>   
+            <p>En direction de</p>
+            <input id="direction" type="text" name="direction" required>
+            <p>Infos supplémentaires</p>
+            <textarea style="resize: none;" cols="50" rows="5" id="comment" type="text" name="comment" placeholder="Ajoutez des informations supplémentaires pour l'heure de rendez-vous et l'emplacement précis de votre voiture" required></textarea> <br><br>
+            <button type="submit">Modifier ma voiture</button><br><br>
+        </form>
+        <button id="removeCar" disabled>Retirer ma voiture de la soirée</button><br>
+        <button id="deleteCar">Supprimer ma voiture</button>
+    </div>
+    <div class="forms">
+        <h3>Les utilisateurs présents dans votre voiture :</h1>
+            <div id="userInCar">
+            </div>
+    </div>
+</body>
+
+</html>

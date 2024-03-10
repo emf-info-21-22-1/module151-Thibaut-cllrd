@@ -12,6 +12,8 @@ class User implements JsonSerializable
 
   private $username;
 
+  private $pk_car;
+
   #Constructor
   public function __construct($username)
   {
@@ -59,6 +61,10 @@ class User implements JsonSerializable
     return $this->picture;
   }
 
+  public function getPk_car($pk_car){
+    return $this->pk_car;
+  }
+
   //setters
   public function setPk($pk)
   {
@@ -90,6 +96,10 @@ class User implements JsonSerializable
     $this->password = $password;
   }
 
+  public function setPk_car($pk_car){
+    $this->pk_car = $pk_car;
+  }
+
   //Serialise la classe et retourne un Json
   public function jsonSerialize(): mixed
   {
@@ -99,7 +109,7 @@ class User implements JsonSerializable
       'picture' => $this->picture,
       'name' => $this->name,
       'firstname' => $this->firstname,
-      
+      'pkCar' => $this->pk_car
     ];
   }
 

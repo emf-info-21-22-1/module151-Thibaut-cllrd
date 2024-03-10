@@ -10,6 +10,8 @@ class Car implements JsonSerializable
   private $comment;
   private $fk_user;
 
+  private $inParty;
+
   #Constructor
   public function __construct($fk_user)
   {
@@ -48,6 +50,10 @@ class Car implements JsonSerializable
     return $this->fk_user;
   }
 
+  public function getInParty(){
+    return $this->inParty;
+  }
+
   # Setters
   public function setPk($pk)
   {
@@ -79,6 +85,10 @@ class Car implements JsonSerializable
     $this->fk_user = $fk_user;
   }
 
+  public function setInParty($inParty){
+    $this->inParty = $inParty;
+  }
+
   #Serialise la classe et retourne un Json
   public function jsonSerialize(): mixed
   {
@@ -86,8 +96,8 @@ class Car implements JsonSerializable
       'start' => $this->start,
       'place' => $this->place,
       'direction' => $this->direction,
-      'comment' => $this->comment
-
+      'comment' => $this->comment,
+      'inParty' => $this->inParty
     ];
   }
 

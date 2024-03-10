@@ -77,6 +77,25 @@ class ServiceHttp {
         });
     }
 
+    /**
+     * Retourne tous les username des utilisateurs qui sont dans la voiture de l'utilisateur.
+     * @param {*} successCallback La fonction appelé si succès
+     * @param {*} errorCallback La fonction appelé si erreur
+     */
+    getUserInCar(successCallback, errorCallback) {
+        $.ajax({
+            type: "GET",
+            dataType: "json",
+            url: this.URL,
+            data: 'action=getUserInCar',
+            xhrFields: {
+                withCredentials: true
+            },
+            success: successCallback,
+            error: errorCallback
+        });
+    }
+
     //----------------------------------------------------------------------------
     //POST REQUEST
     //----------------------------------------------------------------------------
@@ -150,6 +169,11 @@ class ServiceHttp {
         });
     }
 
+    /**
+     * Ajoute une voiture à la soirée et retourne 200 ou erreur.
+     * @param {*} successCallback La fonction appelé si succès
+     * @param {*} errorCallback La fonction appelé si erreur
+     */
     addCarToParty(successCallback, errorCallback){
         $.ajax({
             type: "POST",
@@ -176,7 +200,7 @@ class ServiceHttp {
     createCar(start, place, direction, comment, successCallback, errorCallback) {
         $.ajax({
             type: "POST",
-            dataType: "json",
+            contentType: "application/x-www-form-urlencoded",
             url: this.URL,
             data: 'action=createCar&start=' + start + '&place=' + place + '&direction=' + direction + '&comment=' + comment,
             xhrFields: {
@@ -220,7 +244,7 @@ class ServiceHttp {
     editCar(start, place, direction, comment, successCallback, errorCallback) {
         $.ajax({
             type: "PUT",
-            dataType: "json",
+            contentType: "application/x-www-form-urlencoded",
             url: this.URL,
             data: 'action=editCar&start=' + start + '&place=' + place + '&direction=' + direction + '&comment=' + comment,
             xhrFields: {
@@ -259,6 +283,24 @@ class ServiceHttp {
     //DELETE REQUEST
     //----------------------------------------------------------------------------
 
+    /**
+     * Quitte la voiture dans laquelle l'utilsateur est et retourne 200 ou erreur.
+     * @param {*} successCallback La fonction appelé si succès
+     * @param {*} errorCallback La fonction appelé si erreur
+     */
+    leaveCar(successCallback, errorCallback) {
+        $.ajax({
+            type: "DELETE",
+            contentType: "application/x-www-form-urlencoded",
+            url: this.URL,
+            data: 'action=leaveCar',
+            xhrFields: {
+                withCredentials: true
+            },
+            success: successCallback,
+            error: errorCallback
+        });
+    }
 
     /**
      * Supprime la voiture de l'utilisateur et retourne un code 200 si ok et code d'erreur si pas ok.
@@ -268,7 +310,7 @@ class ServiceHttp {
     deleteCar(successCallback, errorCallback) {
         $.ajax({
             type: "DELETE",
-            dataType: "json",
+            contentType: "application/x-www-form-urlencoded",
             url: this.URL,
             data: 'action=deleteCar',
             xhrFields: {
@@ -287,7 +329,7 @@ class ServiceHttp {
     removeCar(successCallback, errorCallback) {
         $.ajax({
             type: "DELETE",
-            dataType: "json",
+            contentType: "application/x-www-form-urlencoded",
             url: this.URL,
             data: 'action=removeCar',
             xhrFields: {
@@ -306,7 +348,7 @@ class ServiceHttp {
     deleteProfile(successCallback, errorCallback) {
         $.ajax({
             type: "DELETE",
-            dataType: "json",
+            contentType: "application/x-www-form-urlencoded",
             url: this.URL,
             data: 'action=deleteProfile',
             xhrFields: {

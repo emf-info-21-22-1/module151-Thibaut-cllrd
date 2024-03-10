@@ -6,6 +6,10 @@ class EditProfileCtrl {
         const self = this;
         this.form = document.getElementById('editProfile');
         this.attachEventListeners();
+        document.getElementById('deleteProfile').addEventListener('click', function(){
+            console.log("passe");
+            self.http.deleteProfile(self.successDeleteProfile, self.errorDeleteProfile);
+        });
         document.getElementById('uploadLink').addEventListener('click', function () {
             document.getElementById('fileInput').click();
         });
@@ -24,6 +28,8 @@ class EditProfileCtrl {
                 alert('Veuillez sélectionner une image.');
             }
         });
+
+        
 
     }
 
@@ -69,6 +75,14 @@ class EditProfileCtrl {
         document.getElementById("username").value = data['username'];
         document.getElementById("name").value = data['name'];
         document.getElementById("firstname").value = data['firstname'];
+        if(data['pkCar'] == null){
+            document.getElementById("btnEditCar").textContent = "Ajouter une voiture";
+            document.getElementById("linkEditCar").href="createCar.html";
+        }
+        else{
+            document.getElementById("btnEditCar").textContent = "Modifier ma voiture";
+            document.getElementById("linkEditCar").href="editCar.html";
+        }
         // if(data['picture'] != 'null'){
         //     const newPicture = URL.createObjectURL(atob(data['picture']));
         //     document.getElementById("preview").src=newPicture;
@@ -77,12 +91,37 @@ class EditProfileCtrl {
         
     }
 
-    errorLoad(){
-        alert('pok');
+    errorLoad(xhrFields){
+        switch (xhrFields.status) {
+            case 401: alert("Votre session a pris fin, veuillez vous reconnecter"); window.location.href = 'login.html';
+                break;
+            case 500: alert('Problème serveur');
+                break;
+            case 404: alert("Vous n'êtes dans aucune party");
+                break;
+            case 409 : alert("Conflit, il est possible que vous soyez déjà dans une voiture ou que la voiture dont vous essayez de rejoindre est pleine");
+            break;
+        }
     }
 
     successEdit() {
         alert('Compte créé avec succès !');
+    }
+
+    successDeleteProfile(){
+        alert('Profile supprimé');
+        window.location.href = 'login.html';
+    }
+
+    errorDeleteProfile(){
+        switch (xhrFields.status) {
+            case 401: alert("Votre session a pris fin, veuillez vous reconnecter"); window.location.href = 'login.html';
+                break;
+            case 500: alert('Problème serveur');
+                break;
+            case 403 : alert("Vous avez une voiture dans une soirée, retirez la pour supprimer votre profile");
+            break;
+        }
     }
 
     errorEdit(jqXHR) {

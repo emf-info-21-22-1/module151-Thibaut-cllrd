@@ -103,9 +103,15 @@ class ConnectionService
      */
     public function executeQuery($query, $params)
     {
+        //Permet de préparer les paramètres aux injections HTML
+        $paramPrepared = [];
+        foreach($params as $param){
+            $paramPrepared[] = htmlspecialchars($param);
+        }
+
         try {
             $queryPrepared = $this->pdo->prepare($query);
-            $queryRes = $queryPrepared->execute($params);
+            $queryRes = $queryPrepared->execute($paramPrepared);
             return $queryRes;
         } catch (PDOException $e) {
             print "Erreur !: " . $e->getMessage() . "<br/>";

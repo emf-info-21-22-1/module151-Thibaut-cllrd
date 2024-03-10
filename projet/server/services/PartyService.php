@@ -12,12 +12,15 @@ class PartyService
     }
 
 
-
+    /**
+     * Retourne un JSON de participation ou des messages d'erreur.
+     */
     public function getParticipationsOf($pkUser)
     {
         $return = false;
         $getPartyPk = $this->connection->selectSingleQuery('SELECT fk_party FROM t_participation WHERE fk_user=?', [$pkUser]);
         if ($getPartyPk) {
+            
             $query = 'SELECT u.username, u.mail, u.picture, c.start, c.place, c.direction, c.comment FROM t_participation p JOIN t_car c ON p.fk_car = c.pk_car JOIN t_user u ON c.fk_user = u.pk_user WHERE p.fk_party = ? GROUP BY c.pk_car';
             $theParam[] = $getPartyPk['fk_party'];
             //Retourne pour la party toutes les infos necessaire au retour
@@ -42,7 +45,7 @@ class PartyService
                 $car->setPlace($place);
                 $car->setDirection($direction);
                 $car->setComment($comment);
-
+                
                 $availableSeats = -1;
                 foreach ($allAvailableSeats as $carRow) {
                     if ($carRow['username'] == $username) {
@@ -55,7 +58,9 @@ class PartyService
                     'car' => $car->jsonSerialize(),
                     'availableSeats' => $availableSeats
                 ];
+                
             }
+            
             $jsonFinal = json_encode(['participations' => $final], JSON_PRETTY_PRINT);
             $return = $jsonFinal;
         } else {
@@ -64,7 +69,9 @@ class PartyService
         return $return;
     }
 
-
+    /**
+     * Retourne ok si l'utilisateur a rejoint la voiture, sinon des messages d'erreur.
+     */
     public function joinCar($usernameToJoin, $pkJoiner)
     {
         $return = false;
@@ -118,6 +125,9 @@ class PartyService
         return $return;
     }
 
+    /**
+     * Retourne ok si la voiture a été ajouté à la soirée, sinon des messages d'erreur.
+     */
     public function addCarParty($pkUser){
         $participationUser = $this->connection->selectSingleQuery('SELECT * FROM t_participation WHERE fk_user=?',[$pkUser]);
         if($participationUser){
@@ -129,7 +139,7 @@ class PartyService
                 if($haveCar){
                     //L'utilisateur a une voiture
                     
-                    if($this->connection->executeQuery('INSERT INTO t_participation (fk_user, fk_car, fk_party) VALUES (?,?,?)', [$pkUser, ])){
+                    if($this->connection->executeQuery('INSERT INTO t_participation (fk_user, fk_car, fk_party) VALUES (?,?,?)', [$pkUser, $haveCar['pk_car'],$participationUser['fk_party']])){
                         return 'ok';
                     }
                     else{
@@ -152,6 +162,9 @@ class PartyService
         }
     }
 
+    /**
+     * Retourne ok si la voiture a été supprimé, sinon des messages d'erreur.
+     */
     public function removeCar($pkUser){
 
         $return = false;

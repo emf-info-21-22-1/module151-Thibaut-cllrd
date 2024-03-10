@@ -11,7 +11,9 @@ class LoginService
     }
 
 
-    //Check le login et retourne vrai si c'est ok
+    /**
+     * Retourne la PK de l'utilisateur si il a pu se connecter, sinon false.
+     */
     public function checkLogin($user){
         $return = false;
         $userData = $this->connection->selectSingleQuery('SELECT * FROM t_user WHERE mail= ?', [$user->getMail()]);
@@ -30,6 +32,10 @@ class LoginService
         return $return;
     }
 
+    /**
+     * Créé un compte utilisateur.
+     * Retourne ok si il a été créé, alreadyExist si le compte existe déjà et false si il y a eu un autre problème.
+     */
     public function createProfile($user)
     {
 
@@ -40,9 +46,14 @@ class LoginService
             $query = 'INSERT INTO t_user (username, mail,name,firstname,password,picture) VALUES (?,?,?,?,?,?)';
             $params = [$user->getUsername(),$user->getMail(), $user->getName(), $user->getFirstname(), $user->getPassword(), $user->getPicture()];
 
-            if ($this->connection->executeQuery($query, $params)) {
+            $this->connection->executeQuery($query, $params);
+                $pkUser = $this->connection->selectSingleQuery('SELECT pk_user FROM t_user WHERE mail=?',[$user->getMail()]);
+                $this->connection->executeQuery('INSERT INTO t_participation (fk_car, fk_user, fk_party) VALUES (?,?,?)',[null,$pkUser[0], 1]);
+
+                if($this->connection->selectSingleQuery('SELECT * FROM t_user WHERE mail=?', [$user->getMail()])){
                 $return = 'ok';
-            } else {
+                }
+             else {
                 $return = false;
             }
 

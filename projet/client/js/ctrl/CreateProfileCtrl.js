@@ -58,25 +58,27 @@ class CreateProfileCtrl {
 
     }
 
+    //Si l'utilisateur a bien été créé
     successCreation() {
         window.location.href = 'login.html';
         alert('Compte créé avec succès !');
     }
 
+    //Si l'utilisateur n'a pas bien été créé
     errorCreation(jqXHR) {
         switch(jqXHR.status){
             case 409 :
                 alert("Le nom d'utilisateur ou l'adresse e-mail que vous avez saisit appartient déjà à un compte !");
                 break;
             case 500 :
-                alert("Un problème est survenu");
+                alert("Un problème est survenu sur notre serveur.");
                 break;
         }
 
     }
 }
 
-// Assurez-vous que le script s'exécute après que le DOM soit entièrement chargé.
+// S'assure que le script s'exécute après que le DOM soit entièrement chargé.
 document.addEventListener('DOMContentLoaded', () => {
     new CreateProfileCtrl();
 

@@ -14,6 +14,7 @@ class LoginCtrl {
         }
     }
 
+    
     checkLogin() {
         const email = this.form.elements["mail"].value;
         const password = this.form.elements["password"].value;
@@ -22,17 +23,22 @@ class LoginCtrl {
         
     }
 
+    //Si l'utilisteur a reussi à se loguer
     successLogin(){
-        alert('succes');
         window.location.href = 'userPage.html';
     }
 
-    errorLogin(){
-        alert('echec ...');
+    //Si l'utilisateur n'a pas réussi
+    errorLogin(xhrFields){
+        switch(xhrFields.status){
+            case 401 : alert('Vérifier votre adresse e-mail ou votre mot de passe !');
+            break;
+            case 400 : alert("Veuillez remplir tous les champs.");
+        }
     }
 }
 
-// Assurez-vous que le script s'exécute après que le DOM soit entièrement chargé.
+//s'assure que la page a chargée avant d'excuter le script
 document.addEventListener('DOMContentLoaded', () => {
     new LoginCtrl();
     

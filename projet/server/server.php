@@ -100,6 +100,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
   if ($_GET['action'] == 'getProfile') {
     $profileCtrl->getProfile();
   }
+
+  if ($_GET['action'] == 'getUserInCar') {
+    $profileCtrl->getUserInCar();
+  }
 }
 
 //Ecouteur des requêtes DELETE
@@ -115,6 +119,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
 
   if ($_DELETE['action'] == 'deleteProfile') {
     $profileCtrl->deleteProfile();
+  }
+
+  if ($_DELETE['action'] == 'leaveCar') {
+    $profileCtrl->leaveCar();
   }
 
 }

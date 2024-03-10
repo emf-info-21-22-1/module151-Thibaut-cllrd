@@ -11,6 +11,9 @@ class ProfileService
     }
 
 
+    /**
+     * Retourne ok si la voiture a été créé, sinon un message d'erreur ou false si problème serveur.
+     */
     function createCar($start, $place, $direction, $comment, $pkUser)
     {
         $return = false;
@@ -20,7 +23,7 @@ class ProfileService
 
             if ($this->connection->executeQuery('INSERT INTO t_car (start,place,direction,comment,fk_user) VALUES(?,?,?,?,?)', [$start, $place, $direction, $comment, $pkUser])) {
                 //Si la voiture a bien été ajouté
-                $return = true;
+                $return = 'ok';
             } else {
                 //Si elle n a pas bien été ajouté
                 $return = false;
@@ -32,10 +35,14 @@ class ProfileService
         return $return;
     }
 
+    /**
+     * Retourne un JSON d'infos de la voiture ou false.
+     */
     public function getCarInfo($pkUser)
     {
         $return = false;
         $carUser = $this->connection->selectSingleQuery('SELECT * FROM t_car WHERE fk_user=?', [$pkUser]);
+        $pk_party = $this->connection->selectSingleQuery('SELECT fk_party FROM t_participation WHERE fk_car=?', [$carUser['pk_car']]);
         //Verifie que l'utilisateur a une voiture
         if ($carUser) {
             $start = $carUser['start'];
@@ -48,6 +55,10 @@ class ProfileService
             $car->setPlace($place);
             $car->setDirection($direction);
             $car->setComment($comment);
+            $car->setInParty(null);
+            if ($pk_party) {
+                $car->setInParty(true);
+            }
 
             $return = json_encode($car->jsonSerialize(), JSON_PRETTY_PRINT);
         } else {
@@ -58,6 +69,33 @@ class ProfileService
         return $return;
     }
 
+    /**
+     * Retourne un JSON de username qui sont dans la voiture de l'utilisateur, sinon un message d'erreur.
+     */
+    public function getUserInCar($pkUser)
+    {
+        $return = false;
+        $carUser = $this->connection->selectSingleQuery('SELECT * FROM t_car WHERE fk_user=?', [$pkUser]);
+        if ($carUser) {
+            $pkUsersInCar = $this->connection->selectQuery('SELECT fk_user FROM t_participation WHERE fk_car=? ', [$carUser['pk_car']]);
+            $usersInCar = [];
+            foreach ($pkUsersInCar as $thisUser) {
+
+                if ($thisUser[0] != $pkUser) {
+                    $username = $this->connection->selectSingleQuery('SELECT username FROM t_user WHERE pk_user=?', [$thisUser[0]]);
+                    $usersInCar[] = $username[0];
+                }
+            }
+            $return = json_encode($usersInCar, JSON_PRETTY_PRINT);
+        } else {
+            $return = 'noCar';
+        }
+        return $return;
+    }
+
+    /**
+     * Retourne ok si la voiture a été modifié, sinon un message d'erreur ou false si problème serveur.
+     */
     public function editCar($start, $place, $direction, $comment, $pkUser)
     {
         $return = false;
@@ -100,7 +138,7 @@ class ProfileService
                         if ($this->isStartTimeValid($start)) {
                             //L'heure de départ est dans au moins 30 minutes et le nouveau start est dans au moins 10 minutes
                             if ($this->connection->executeQuery($query, $params)) {
-                                $return = true;
+                                $return = 'ok';
                             } else {
                                 //Il y a eu une erreur alors
                                 $return = false;
@@ -166,6 +204,9 @@ class ProfileService
         return $return;
     }
 
+    /**
+     * Retourne ok si la voiture a été supprimé, sinon un message d'erreur ou false si problème serveur.
+     */
     public function deleteCar($pkUser)
     {
         $return = false;
@@ -182,10 +223,9 @@ class ProfileService
                 if ($start >= $nowPlus30Min) {
                     //La voiture part dans au moins 30 minutes donc ok
                     if ($this->connection->executeQuery('DELETE FROM t_participation WHERE fk_car=?', [$carOfUser['pk_car']])) {
-
                         if ($this->connection->executeQuery('DELETE FROM t_car WHERE fk_user=?', [$pkUser])) {
                             //La voiture a été supprimée
-                            $return = true;
+                            $return = 'ok';
                         } else {
                             //erreur lors de la suppresion de la voiture
                             $return = false;
@@ -215,6 +255,9 @@ class ProfileService
         return $return;
     }
 
+    /**
+     * Retourne un JSON avec les infos de l'utilisateur, sinon un message d'erreur ou false si problème serveur.
+     */
     public function getProfile($pkUser)
     {
         $return = false;
@@ -225,6 +268,11 @@ class ProfileService
             $user->setPicture(base64_encode($profile['picture']));
             $user->setName($profile['name']);
             $user->setFirstname($profile['firstname']);
+            $user->setPk_car(null);
+            $pkCar = $this->connection->selectSingleQuery('SELECT pk_car FROM t_car WHERE fk_user=?', [$pkUser]);
+            if ($pkCar) {
+                $user->setPk_car($pkCar[0]);
+            }
             $return = json_encode($user->jsonSerialize());
         } else {
             $return = false;
@@ -232,6 +280,9 @@ class ProfileService
         return $return;
     }
 
+    /**
+     * Retourne ok si l'utilisateur a été modifié, sinon un message d'erreur ou false si problème serveur.
+     */
     public function editProfile($newUser, $pkUser)
     {
         $return = false;
@@ -264,64 +315,110 @@ class ProfileService
             $params[] = $username;
         }
 
-        
-            try{
-                if ($updates) {
-                    $setQuery = implode(', ', $updates);
-                    $params[] = $pkUser;
-                    $request = $this->connection->executeQuery("UPDATE t_user SET $setQuery WHERE pk_user=?", $params);
-                    if ($request) {
-                        var_dump($request);
-                        $return = 'ok';
-                    } else {
-                        $return = false;
-                    }
+
+        try {
+            if ($updates) {
+                $setQuery = implode(', ', $updates);
+                $params[] = $pkUser;
+                $request = $this->connection->executeQuery("UPDATE t_user SET $setQuery WHERE pk_user=?", $params);
+                if ($request) {
+                    var_dump($request);
+                    $return = 'ok';
                 } else {
-                    $return = 'noChanges';
+                    $return = false;
                 }
+            } else {
+                $return = 'noChanges';
             }
-            catch(\Exception $e){
-                $return = false;
-            }
-            
-        return $return;
-    }
-
-    public function deleteProfile($pkUser)
-    {
-        $return = false;
-
-        $participation = $this->connection->selectSingleQuery('SELECT * FROM t_participation WHERE fk_user=?', [$pkUser]);
-        $carUser = $this->connection->selectSingleQuery('SELECT * FROM t_car WHERE fk_user=?', [$pkUser]);
-        $isDriver = $this->connection->selectSingleQuery('SELECT * FROM t_participation WHERE fk_user=? AND fk_car=?', [$pkUser, $carUser['pk_car']]);
-        if ($participation) {
-            //Si il est dans une party
-            if($isDriver){
-                //Si il est conducteur
-                $return = 'isDriver';
-            }
-            else{
-                //Si il n'est pas conducteur mais dans une party
-                $return = 'isInParty';
-            }
-        } else {
-            //il n'est pas dans une party
-            $this->connection->executeQuery('DELETE FROM t_user WHERE pk_user=?', [$pkUser]);
-            if(!$this->connection->selectSingleQuery('SELECT * FROM t_user WHERE pk_user=?', [$pkUser])){
-                //L'utilisateur a bien été supprimé
-                $return = 'ok';
-            }
-            else{
-                //L'utilisateur n'a pas été supprimé
-                $return = false;
-            }
-            
+        } catch (\Exception $e) {
+            $return = false;
         }
 
         return $return;
     }
 
+    /**
+     * Retourne ok si la voiture a été quitté, sinon un message d'erreur ou false si problème serveur.
+     */
+    public function leaveCar($pkUser){
+        $userCar = $this->connection->selectSingleQuery('SELECT pk_car FROM t_car WHERE fk_user=?', [$pkUser]);
+        $carToLeave = $this->connection->selectSingleQuery('SELECT fk_car FROM t_participation WHERE fk_user=? AND fk_car IS NOT NULL AND NOT (fk_car=?)',[$pkUser, $userCar[0]]);
+        if ($carToLeave) {
+            //L'utilisateur est bien dans une voiture
+            $this->connection->executeQuery('DELETE FROM t_participation WHERE fk_user=? AND fk_car=?', [$pkUser,$carToLeave[0]]);
+            if($this->connection->selectSingleQuery('SELECT * FROM t_participation WHERE fk_user=? AND fk_car=?', [$pkUser,$carToLeave[0]])){
+                //Tout s'est bien passé
+                return 'ok';
+            }
+            else{
+                return false;
+            }
+        }
+        else{
+            //L'utilisateur n'est pas dans une voiture
+            return 'noCar';
+        }
+    }
 
+    /**
+     * Retourne ok si le profil a été supprimé, sinon un message d'erreur ou false si problème serveur.
+     */
+    public function deleteProfile($pkUser)
+    {
+        $return = false;
+        $carUSer = $this->connection->selectSingleQuery('SELECT * FROM t_car WHERE fk_user=?', [$pkUser]);
+        $isDriver = $this->connection->selectSingleQuery('SELECT * FROM t_participation WHERE fk_user=? AND fk_car IS NOT NULL', [$pkUser]);
+        if ($carUSer) {
+            //L'utilisateur possède une voiture
+            $isDriver = $this->connection->selectSingleQuery('SELECT * FROM t_participation WHERE fk_user=? AND fk_car=?', [$pkUser, $carUSer['pk_car']]);
+            if (!$isDriver) {
+                //Pas conducteur donc ok
+                //Suppression de sa trace dans les soirées
+                $this->connection->executeQuery('DELETE FROM t_participation WHERE fk_user=?', [$pkUser]);
+                if (!$this->connection->selectSingleQuery('SELECT * FROM t_participation WHERE fk_user=?', [$pkUser])) {
+                    //L'utilisateur n'apparait plus dans les soirées
+                    //Suppression de l'utilisateur
+                    $this->connection->executeQuery('DELETE FROM t_user WHERE fk_user=?', [$pkUser]);
+                    if (!$this->connection->selectSingleQuery('SELECT * FROM t_user WHERE pk_user=?', [$pkUser])) {
+                        //L'utilisateur a bien été supprimé
+                        $return = 'ok';
+                    } else {
+                        //Probleme lors de la suppresion
+                        $return = false;
+                    }
+                } else {
+                    //Probleme lors de la suppression
+                    $return = false;
+                }
+            } else {
+                //L'utilisateur est conducteur donc impossible
+                $return = 'isDriver';
+            }
+        } else {
+            //L'utilsateur ne possède pas de voiture
+            //Suppression de sa trace dans les soirées
+            $this->connection->executeQuery('DELETE FROM t_participation WHERE fk_user=?', [$pkUser]);
+            if (!$this->connection->selectSingleQuery('SELECT * FROM t_participation WHERE fk_user=?', [$pkUser])) {
+                //L'utilisateur n'apparait plus dans les soirées
+                //Suppression de l'utilisateur
+                $this->connection->executeQuery('DELETE FROM t_user WHERE pk_user=?', [$pkUser]);
+                if (!$this->connection->selectSingleQuery('SELECT * FROM t_user WHERE pk_user=?', [$pkUser])) {
+                    //L'utilisateur a bien été supprimé
+                    $return = 'ok';
+                } else {
+                    //Probleme lors de la suppresion
+                    $return = false;
+                }
+            } else {
+                //Probleme lors de la suppression
+                $return = false;
+            }
+
+
+        }
+
+        return $return;
+    }
 }
 
 
