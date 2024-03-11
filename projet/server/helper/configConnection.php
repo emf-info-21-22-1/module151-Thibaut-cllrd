@@ -1,17 +1,17 @@
 <?php
 	//Informations de connexion à la base de données
     //En PROD
-    // define('DB_TYPE', 'mysql');
-    // define('DB_HOST', 'localhost');
-    // define('DB_NAME', 'colliardt_DriveMyNight');
-    // define('DB_USER', 'colliardt_DriveMyNight');
-    // define('DB_PASS', '@R2eu#@Ez~y1');
+    define('DB_TYPE', 'mysql');
+    define('DB_HOST', '5.182.248.183');
+    define('DB_NAME', 'colliardt_DriveMyNight');
+    define('DB_USER', 'colliardt_DriveMyNight');
+    define('DB_PASS', '@R2eu#@Ez~y1');
 
 
     //En LAB
-	define('DB_TYPE', 'mysql');
-    define('DB_HOST', 'host.docker.internal');
-    define('DB_NAME', 'DriveMyNight');
-    define('DB_USER', 'root');
-    define('DB_PASS', 'emf123');
+	// define('DB_TYPE', 'mysql');
+    // define('DB_HOST', 'host.docker.internal');
+    // define('DB_NAME', 'DriveMyNight');
+    // define('DB_USER', 'root');
+    // define('DB_PASS', 'emf123');
 ?>

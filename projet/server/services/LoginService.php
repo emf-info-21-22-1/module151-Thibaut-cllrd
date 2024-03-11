@@ -46,7 +46,7 @@ class LoginService
             $query = 'INSERT INTO t_user (username, mail,name,firstname,password,picture) VALUES (?,?,?,?,?,?)';
             $params = [$user->getUsername(),$user->getMail(), $user->getName(), $user->getFirstname(), $user->getPassword(), $user->getPicture()];
 
-            $this->connection->executeQuery($query, $params);
+                $this->connection->executeQuery($query, $params);
                 $pkUser = $this->connection->selectSingleQuery('SELECT pk_user FROM t_user WHERE mail=?',[$user->getMail()]);
                 $this->connection->executeQuery('INSERT INTO t_participation (fk_car, fk_user, fk_party) VALUES (?,?,?)',[null,$pkUser[0], 1]);
 

@@ -5,9 +5,9 @@ class ServiceHttp {
 
     constructor() {
         //PROD
-        //this.URL = "https://colliardt.emf-informatique.ch/151/server/server.php";
+        this.URL = "https://colliardt.emf-informatique.ch/151/server/server.php";
         //LAB
-        this.URL = "http://localhost:8081/server.php";
+        //this.URL = "http://localhost:8081/server.php";
     }
 
     // singleton getInstance pour ne pas le créer plusieurs fois

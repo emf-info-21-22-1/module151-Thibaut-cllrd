@@ -26,7 +26,7 @@ class UserPageCtrl {
     }
 
     leaveCar(){
-        const confirmation = window.confirm("Voulez vous réelement ajouter votre véhicule à cette soirée ?");
+        const confirmation = window.confirm("Voulez vous réelement quitter cette voiture ?");
         if(confirmation){
             this.http.leaveCar(this.successLeave, this.errorLeave);
         }
